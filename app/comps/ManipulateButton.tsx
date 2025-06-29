@@ -24,16 +24,16 @@ export function ManipulateButton(props: any) {
                 visible
                 icon={open ? 'close' : 'plus'}
                 actions={[
-                    { icon: 'plus', onPress: () => console.log('Pressed add') },
+                    // { icon: 'plus', onPress: () => console.log('Pressed add') },
                     {
                         icon: 'plus',
-                        label: '動作2',
-                        onPress: () => console.log('Pressed star'),
+                        label: '新增',
+                        onPress: () => showModal('2'),
                     },
                     {
                         icon: 'sale',
                         label: '銷售',
-                        onPress: show,
+                        onPress: () => showModal('1'),
                     }
                 ]}
                 onStateChange={onStateChange}

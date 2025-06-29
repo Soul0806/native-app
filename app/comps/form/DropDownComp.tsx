@@ -1,5 +1,5 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -14,10 +14,10 @@ import { Dropdown } from 'react-native-element-dropdown';
     { label: 'Item 8', value: '8' },
   ];
 
-  const DropdownComponent = () => {
-    const [value, setValue] = useState(null);
-    const [isFocus, setIsFocus] = useState(false);
-
+  const DropdownComponent = (props: any) => {
+    const { value, setValue } = props
+    const [ isFocus, setIsFocus] = React.useState<boolean>(false);
+    
     const renderLabel = () => {
       if (value || isFocus) {
         return (
@@ -69,10 +69,11 @@ import { Dropdown } from 'react-native-element-dropdown';
 
   const styles = StyleSheet.create({
     container: {
+      flex: 1,
       backgroundColor: 'white',
       padding: 16,
     },
-    dropdown: {
+    dropdown: {      
       height: 50,
       borderColor: 'gray',
       borderWidth: 0.5,
