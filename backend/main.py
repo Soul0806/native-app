@@ -7,15 +7,20 @@ from backend.models import TireBrand
 from typing import List, Annotated, Dict
 from pydantic import BaseModel
 from backend.getSpecs import spec_list
+from datetime import datetime
 
 # Pydantic 回傳模型
 class Brand(BaseModel):
     id: int
     name: str
+    create_at: datetime
 
     model_config = {
         "from_attributes": True
     }
+    
+class BrandCreate(BaseModel):
+    name: str    
     
 spec_model = Dict[str, Dict[str, Dict[str, int]]]
 
@@ -52,3 +57,11 @@ async def check_auth(request: Request, call_next):
 @app.get('/test', response_model=spec_model)
 def getSpe(db: db_denpendency):
     return spec_list
+
+@app.post('/test1', response_model=Brand)
+def createBrand(brand: BrandCreate, db: db_denpendency):
+    db_brand = TireBrand(name=brand.name)
+    db.add(db_brand)
+    db.commit()
+    db.refresh(db_brand)
+    return db_brand
