@@ -1,16 +1,21 @@
 import { baseModalStyle } from "@/app/src/styles/modalStyle";
 import * as React from "react";
-import { Button, Modal, Portal } from "react-native-paper";
+import { Modal, Portal } from "react-native-paper";
 
-type BaseModalProps = React.PropsWithChildren<{}>;
+type BaseModalProps = {
+  visible: boolean,
+  hideModal: () => void,
+  // open?: boolean
+  children: React.ReactNode;
+}
 
-const BaseModal = ({ children}: BaseModalProps ) => {
-  const [visible, setVisible] = React.useState(false);
+const BaseModal = ({ visible, hideModal, children }: BaseModalProps ) => {  
 
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  // const showModal = () => setVisible(true);
+  // const hideModal = () => setVisible(false);
   const containerStyle = {
     ...baseModalStyle,
+
   };
 
   return (
@@ -25,9 +30,6 @@ const BaseModal = ({ children}: BaseModalProps ) => {
           { children }
         </Modal>
       </Portal>
-      <Button style={{ marginTop: 30 }} onPress={showModal}>
-        Show
-      </Button>
     </>
   );
 };

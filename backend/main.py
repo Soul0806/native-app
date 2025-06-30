@@ -13,7 +13,7 @@ from datetime import datetime
 class Brand(BaseModel):
     id: int
     name: str
-    create_at: datetime
+    created_at: datetime
 
     model_config = {
         "from_attributes": True
@@ -54,12 +54,18 @@ async def check_auth(request: Request, call_next):
         raise HTTPException(status_code=403, detail="Unauthorized")
     return await call_next(request)
 
-@app.get('/test', response_model=spec_model)
+@app.get('/csv/specs', response_model=spec_model)
 def getSpe(db: db_denpendency):
     return spec_list
 
-@app.post('/test1', response_model=Brand)
-def createBrand(brand: BrandCreate, db: db_denpendency):
+@app.get('/brands', response_model=List[Brand])
+def getBrands(db: db_denpendency):
+    brands = db.query(TireBrand).all()    
+    return brands
+
+
+@app.post('/brand/insert', response_model=Brand)
+def insertBrand(brand: BrandCreate, db: db_denpendency):
     db_brand = TireBrand(name=brand.name)
     db.add(db_brand)
     db.commit()

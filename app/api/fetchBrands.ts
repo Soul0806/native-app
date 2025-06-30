@@ -1,15 +1,15 @@
 import config from '../config/apiConfig';
 
-export const fetchSpecs = async () => {
+export const fetchBrands = async () => {
     try {
-        const res = await fetch(`${config.API_BASE_URL}/csv/specs`, {
+        const res = await fetch(`${config.API_BASE_URL}/brands`, {
             headers: {
                 "x-api-key": "00001111"
             }
         })
         if (!res.ok) {
             throw new Error("Failed");
-        }
+        }        
         return res.json();
         //   setSpects(data);
     } catch (err) {

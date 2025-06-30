@@ -28,8 +28,8 @@ export default function sale() {
   return (
     <PaperProvider>
       <ManipulateButton showModal={showModal} />
-      {display == '1' && <SaleModal visible={visible} hideModal={hideModal} />}
-      {display == '2' && <InsertModal />}            
+      {display == 'sale' && <SaleModal visible={visible} hideModal={hideModal} />}
+      {display == 'plus' && <InsertModal visible={visible} hideModal={hideModal}/>}            
     </PaperProvider>
   );
 }

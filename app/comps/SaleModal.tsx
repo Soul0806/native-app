@@ -30,16 +30,14 @@ const SaleModal = (props: any) => {
     ...baseModalStyle,
 
     position: pos,
-    top: 0,
-    alignSelf: align, // 水平置中
+    top: 0,    
   };
 
   const chargeModalStyle = {
     ...baseModalStyle,
 
     position: pos,
-    top: 200,
-    alignSelf: align, // 水平置中
+    top: 200,    
   };
 
   const onPress = (event: string) => {
@@ -69,10 +67,6 @@ const SaleModal = (props: any) => {
   const onChangeNote = (note: string) => {
     setNote(note);
   };
-
-  React.useEffect(() => {
-    console.log(note);
-  }, [note]);
 
   return (
     <Portal>
