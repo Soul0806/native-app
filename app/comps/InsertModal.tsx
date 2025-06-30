@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import BaseModal from "./modal/BaseModal";
 
@@ -11,14 +11,14 @@ const InsertModal = (props: any) => {
   const { visible, hideModal } = props;
   const [brand, setBrand] = useState<string>("");
   const [allBrands, setAllBrands] = useState<any | []>([]);
-  const [ error , setError ] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     const loadBrands = async () => {
       const brands = await fetchBrands();
       setAllBrands(brands);
     };
-    loadBrands();    
+    loadBrands();
   }, []);
 
   const handleBrandChange = (brand: string) => {
@@ -26,14 +26,13 @@ const InsertModal = (props: any) => {
     setBrand(brand);
   };
 
-  const handleSubmit = async () => {    
-    
-    const existed = allBrands.some((b: any) => 
-      brand.toLowerCase() == b["name"].toLowerCase()            
-    ) 
+  const handleSubmit = async () => {
+    const existed = allBrands.some(
+      (b: any) => brand.toLowerCase() == b["name"].toLowerCase()
+    );
 
-    if(existed) {
-      setError(true)
+    if (existed) {
+      setError(true);
       return;
     }
     const payload = {
@@ -60,16 +59,25 @@ const InsertModal = (props: any) => {
   return (
     <>
       <BaseModal visible={visible} hideModal={hideModal}>
+      <TouchableOpacity>
+          <Text style={styles.tab_car}>新增汽車規格</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.tab_brand}>新增輪胎規格</Text>
+        </TouchableOpacity>
+        
+        
+
         <Text>現有輪胎品牌</Text>
         <View style={styles.row_list}>
-          {allBrands.length === 0 ? (
+          {allBrands?.length === 0 ? (
             <Indicator />
           ) : (
-            allBrands.map((brand: any) => 
-            <Text 
-                key={brand.name}
-                style={styles.item}
-                >{brand.name}</Text>)
+            allBrands?.map((brand: any) => (
+              <Text key={brand.name} style={styles.item}>
+                {brand.name}
+              </Text>
+            ))
           )}
         </View>
         <Text style={styles.label}>新增輪胎品牌</Text>
@@ -86,13 +94,35 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   row_list: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   item: {
     marginVertical: 5,
     marginRight: 5,
-  }
+  },
+  tab_car: {
+    position: "absolute",
+    top: -60,
+    left: -20,
+    zIndex: 10,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    height: 40,
+    padding: 10,
+    backgroundColor: "pink",
+  },
+  tab_brand: {
+    position: "absolute",
+    top: -60,
+    left: 70,
+    zIndex: -1,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    height: 40,
+    padding: 10,
+    backgroundColor: "limegreen",
+  },
 });
 
 export default InsertModal;
