@@ -9,8 +9,8 @@ export default function TabsLayout() {
         initialRouteName={initialPage}
         screenOptions={{ tabBarActiveTintColor: "coral" }}>
             <Tabs.Screen name="sale" options={{ "title": 'Sale' }} />
-            <Tabs.Screen name="idx" options={{
-                "title": 'Home',
+            <Tabs.Screen name="home" options={{
+                "title": 'home',
                 tabBarIcon: ({ color, focused }) => {
                     return focused ?
                         (<FontAwesome name="home" size={24} color="black" />):

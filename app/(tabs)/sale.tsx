@@ -20,10 +20,6 @@ export default function sale() {
     setVisible(false);
   };
 
-  React.useEffect(() => {
-
-  }, [display])
-
   const containerStyle = { backgroundColor: "white", padding: 20, margin: 10 };
   return (
     <PaperProvider>
