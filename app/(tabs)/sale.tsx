@@ -5,6 +5,7 @@ import { PaperProvider } from "react-native-paper";
 import InsertModal from "../comps/InsertModal";
 import ManipulateButton from "../comps/ManipulateButton";
 import SaleModal from "../comps/SaleModal";
+import TestModal from "../comps/TestModal";
 
 
 
@@ -26,6 +27,7 @@ export default function sale() {
       <ManipulateButton showModal={showModal} />
       {display == 'sale' && <SaleModal visible={visible} hideModal={hideModal} />}
       {display == 'plus' && <InsertModal visible={visible} hideModal={hideModal}/>}            
+      {display == 'test' && <TestModal visible={visible} hideModal={hideModal} />}            
     </PaperProvider>
   );
 }

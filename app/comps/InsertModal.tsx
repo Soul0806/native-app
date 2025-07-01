@@ -59,15 +59,12 @@ const InsertModal = (props: any) => {
   return (
     <>
       <BaseModal visible={visible} hideModal={hideModal}>
-      <TouchableOpacity>
-          <Text style={styles.tab_car}>新增汽車規格</Text>
+      <TouchableOpacity style={styles.tab_car}>
+          <Text>新增汽車規格</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.tab_brand}>新增輪胎規格</Text>
+        <TouchableOpacity style={styles.tab_brand}>
+          <Text>新增輪胎規格</Text>
         </TouchableOpacity>
-        
-        
-
         <Text>現有輪胎品牌</Text>
         <View style={styles.row_list}>
           {allBrands?.length === 0 ? (
@@ -103,25 +100,25 @@ const styles = StyleSheet.create({
   },
   tab_car: {
     position: "absolute",
-    top: -60,
-    left: -20,
+    top: -40,
+    left: 0,
     zIndex: 10,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     height: 40,
     padding: 10,
-    backgroundColor: "pink",
+    backgroundColor: "gray",
   },
   tab_brand: {
     position: "absolute",
-    top: -60,
-    left: 70,
+    top: -40,
+    left: 100,
     zIndex: -1,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     height: 40,
     padding: 10,
-    backgroundColor: "limegreen",
+    backgroundColor: "white",
   },
 });
 

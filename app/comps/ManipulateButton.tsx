@@ -18,7 +18,14 @@ export function ManipulateButton(props: any) {
                 open={open}
                 visible
                 icon={open ? 'close' : 'plus'}
-                actions={[                    
+                actions={[
+                     {                        
+                        icon: 'test',
+                        label: '新增',
+                        onPress: function() {
+                           showModal(this.icon);
+                        }
+                    },                    
                     {                        
                         icon: 'plus',
                         label: '新增',
