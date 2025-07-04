@@ -1,8 +1,8 @@
-import config from '../config/apiConfig';
+import API from '../config/apiConfig';
 
 export const fetchSpecs = async () => {
     try {
-        const res = await fetch(`${config.API_BASE_URL}/csv/specs`, {
+        const res = await fetch(API.CRV_SPEC, {
             headers: {
                 "x-api-key": "00001111"
             }

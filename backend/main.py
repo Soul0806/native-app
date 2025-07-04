@@ -1,13 +1,16 @@
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import session
-from backend.database import SessionLocal,engine, Base
 
+from backend.database import SessionLocal,engine, Base
 from backend.models import TireBrand
+
 from typing import List, Annotated, Dict
 from pydantic import BaseModel
-from backend.getSpecs import spec_list
 from datetime import datetime
+
+from backend.services.get_txt_records import dict_record
+from backend.getSpecs import spec_list
 
 # Pydantic 回傳模型
 class Brand(BaseModel):
@@ -23,6 +26,7 @@ class BrandCreate(BaseModel):
     name: str    
     
 spec_model = Dict[str, Dict[str, Dict[str, int]]]
+record_model = Dict[str, List[str]]
 
 app = FastAPI()
 origins = [
@@ -62,6 +66,10 @@ def getSpe(db: db_denpendency):
 def getBrands(db: db_denpendency):
     brands = db.query(TireBrand).all()    
     return brands
+
+@app.get('/txt/records', response_model=record_model)
+def getBrands(db: db_denpendency):    
+    return dict_record
 
 
 @app.post('/brand/insert', response_model=Brand)

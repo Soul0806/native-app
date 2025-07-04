@@ -1,4 +1,4 @@
-import { removeLastThreeChars } from "@/backend/libs/func";
+import { removeLastThreeChars } from "@/app/libs/funcs";
 
 import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView, ScrollView, Text, View } from "react-native";

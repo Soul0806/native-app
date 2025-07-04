@@ -7,17 +7,15 @@ import ManipulateButton from "../comps/ManipulateButton";
 import SaleModal from "../comps/SaleModal";
 import TestModal from "../comps/TestModal";
 
-
-
 export default function sale() {
-  const [visible, setVisible] = React.useState(false);
-  const [display, setDisplay] = React.useState('');
+  const [visible, setVisible] = React.useState<boolean>(false);
+  const [display, setDisplay] = React.useState("");
 
   const showModal = (e) => {
     setDisplay(e);
     setVisible(true);
-  }
-  const hideModal = () => {    
+  };
+  const hideModal = () => {
     setVisible(false);
   };
 
@@ -25,9 +23,15 @@ export default function sale() {
   return (
     <PaperProvider>
       <ManipulateButton showModal={showModal} />
-      {display == 'sale' && <SaleModal visible={visible} hideModal={hideModal} />}
-      {display == 'plus' && <InsertModal visible={visible} hideModal={hideModal}/>}            
-      {display == 'test' && <TestModal visible={visible} hideModal={hideModal} />}            
+      {display == "sale" && (
+        <SaleModal visible={visible} hideModal={hideModal} />
+      )}
+      {display == "plus" && (
+        <InsertModal visible={visible} hideModal={hideModal} />
+      )}
+      {display == "search" && (
+        <TestModal visible={visible} hideModal={hideModal} />
+      )}
     </PaperProvider>
   );
 }

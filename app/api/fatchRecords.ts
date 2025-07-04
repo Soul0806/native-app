@@ -1,6 +1,6 @@
 import API from '../config/apiConfig';
 
-export const fetchBrands = async () => {
+export const fetchRecords = async () => {
     try {
         const res = await fetch(API.RECORD, {
             headers: {
