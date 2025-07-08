@@ -5,6 +5,7 @@
 # from collections import defaultdict
 import ast
 from backend.libs.func import BASE_DIR
+import backend.services.parseAndFormat
 
 file_name = '/assets/output.txt'
 

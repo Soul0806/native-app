@@ -1,6 +1,15 @@
 import { fetchRecords } from "@/app/api/fatchRecords";
+import OrderList from "@/app/comps/form/OrderList";
+import { entriesValueFilter } from "@/app/libs/funcs";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const numbers = [...Array(10).keys()];
 
@@ -10,6 +19,7 @@ function TestModal(props: any) {
   const [isTruck, setIsisTruck] = useState<boolean>(false);
   const [carType, setCarType] = useState<string>("car");
   const [spec, setSpec] = useState<string>("");
+  const [width, setWidth] = useState<string>("");
   const [height, setHeight] = useState<string>("");
   const [inch, setInch] = useState<string>("");
   const [records, setRecords] = useState<Record<string, string[]>>({});
@@ -25,9 +35,16 @@ function TestModal(props: any) {
     loadRecords();
   });
 
+  useEffect(() => {
+    // const w = width.length > 0 ? `-${width}` : '';
+    const h = height.length > 0 ? `-${height}` : "";
+    const i = inch.length > 0 ? `-${inch}` : "";
+    setSpec(`${width}${h}${i}`);
+  }, [width, height, inch]);
+
   const handlePress = (val: string) => {
-    if (spec.length >= 3) {
-      if (+spec[0] >= 7) {
+    if (width.length >= 3) {
+      if (+width[0] >= 7) {
         if (inch.length < 3) {
           setInch((prev) => prev + val);
         }
@@ -39,7 +56,7 @@ function TestModal(props: any) {
         }
       }
     } else {
-      setSpec((prev) => prev + val);
+      setWidth((prev) => prev + val);
     }
   };
 
@@ -52,7 +69,7 @@ function TestModal(props: any) {
       setHeight(height.slice(0, -1));
       return;
     }
-    setSpec(spec.slice(0, -1));
+    setWidth(width.slice(0, -1));
   };
 
   useEffect(() => {}, [records]);
@@ -69,31 +86,41 @@ function TestModal(props: any) {
         {!isTruck && <TView>轎,休旅車</TView>}
         {isTruck && <TView>貨車</TView>}
       </View> */}
-      <View style={styles.row_btn}>
-        {numbers.map((n) => (
-          <TouchableOpacity onPress={() => handlePress(n.toString())}>
-            <Text style={styles.circleText}>{n}</Text>
-          </TouchableOpacity>
-        ))}
-        {/* <Text>1</Text>
-        </TouchableOpacity>
-        <Text>2</Text>
-        <Text>3</Text> */}
-      </View>
-      <View style={styles.wrap_checkspec}>
-        <View>
-          <Text style={styles.spec}>
-            {spec.slice(0, 3)}
-            {+height > 0 && ((+spec[0] >= 7 && "-") || (+spec[0] < 7 && "/"))}
-            {height}
-            {+inch > 0 && "-"}
-            {inch}
-            {/* {spec.length > 3 && +spec[0] < 7 && <Text>/</Text>} */}
-          </Text>
+      <View style={styles.container}>
+        <View style={styles.wrapper_btn}>
+          {numbers.map((n) => (
+            <TouchableOpacity onPress={() => handlePress(n.toString())}>
+              <Text style={styles.circleText}>{n}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
-        <TouchableOpacity onPress={back}>
-          <Text style={styles.back}>{`<-`}</Text>
-        </TouchableOpacity>
+        <View style={styles.wrapper_checkspec}>
+          <View style={styles.wrapper_spec}>
+            <Text style={styles.spec}>
+              {width.slice(0, 3)}
+              {+height > 0 &&
+                ((+width[0] >= 7 && "-") || (+width[0] < 7 && "/"))}
+              {height}
+              {+inch > 0 && "-"}
+              {inch}
+            </Text>
+          </View>
+          <View>
+            {spec.length > 0 && (
+              <TouchableOpacity onPress={back}>
+                <FontAwesome5
+                  style={styles.back}
+                  name="backspace"
+                  size={24}
+                  color="red"
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+        <ScrollView>
+          {records && <OrderList list={entriesValueFilter(records, spec)} />}
+        </ScrollView>
       </View>
     </>
   );
@@ -102,13 +129,13 @@ function TestModal(props: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    borderWidth: 1,
+    gap: 15,
   },
   circleText: {
-    width: 60,
-    height: 60,
-    borderRadius: 30, // 半徑 = 寬高的一半
+    width: 50,
+    height: 50,
+    borderRadius: 25, // 半徑 = 寬高的一半
 
     margin: 10,
     backgroundColor: "#3498db",
@@ -116,15 +143,17 @@ const styles = StyleSheet.create({
     textAlignVertical: "center", // Android 專用（iOS 不生效）
     // color: "#fff",
     fontSize: 24,
-    lineHeight: 60, // iOS 對齊用法（等於高度）
+    lineHeight: 50, // iOS 對齊用法（等於高度）
   },
-  wrap_checkspec: {
+  wrapper_checkspec: {
+    borderWidth: 1,
     flexDirection: "row",
-    justifyContent: "space-around",
+    alignItems: "center",
     fontSize: 40,
+    borderRadius: 10,
   },
   back: {
-    fontSize: 40,
+    fontSize: 50,
   },
   // switch: {
   //   flexDirection: "row",
@@ -137,10 +166,15 @@ const styles = StyleSheet.create({
   //   flexDirection: "row",
   //   justifyContent: "center",
   // },
-  spec: {
-    fontSize: 30,
+  wrapper_spec: {
+    width: "80%",
   },
-  row_btn: {
+  spec: {
+    fontSize: 50,
+    marginLeft: 10,
+    textAlign: "center",
+  },
+  wrapper_btn: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     flexWrap: "wrap",
