@@ -2,7 +2,7 @@ import { fetchRecords } from "@/app/api/fatchRecords";
 import OrderList from "@/app/comps/form/OrderList";
 import { entriesValueFilter } from "@/app/libs/funcs";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -10,10 +10,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
 const numbers = [...Array(10).keys()];
 
-function TestModal(props: any) {
+function RecordModal(props: any) {
+  const scrollRef = useRef<ScrollView>(null);
   const { visible, hideModal } = props;
 
   const [isTruck, setIsisTruck] = useState<boolean>(false);
@@ -24,6 +24,7 @@ function TestModal(props: any) {
   const [inch, setInch] = useState<string>("");
   const [records, setRecords] = useState<Record<string, string[]>>({});
 
+  const [file, setFile] = useState<any>("");
   const toggleSwitch = () => setIsisTruck((prev) => !prev);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function TestModal(props: any) {
     };
 
     loadRecords();
-  });
+  }, []);
 
   useEffect(() => {
     // const w = width.length > 0 ? `-${width}` : '';
@@ -72,7 +73,10 @@ function TestModal(props: any) {
     setWidth(width.slice(0, -1));
   };
 
-  useEffect(() => {}, [records]);
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollToEnd({ animated: true });
+  };
+
   return (
     <>
       {/* <View style={styles.switch}>
@@ -88,8 +92,8 @@ function TestModal(props: any) {
       </View> */}
       <View style={styles.container}>
         <View style={styles.wrapper_btn}>
-          {numbers.map((n) => (
-            <TouchableOpacity onPress={() => handlePress(n.toString())}>
+          {numbers.map((n, k) => (
+            <TouchableOpacity key={k} onPress={() => handlePress(n.toString())}>
               <Text style={styles.circleText}>{n}</Text>
             </TouchableOpacity>
           ))}
@@ -118,9 +122,17 @@ function TestModal(props: any) {
             )}
           </View>
         </View>
-        <ScrollView>
-          {records && <OrderList list={entriesValueFilter(records, spec)} />}
-        </ScrollView>
+        <View style={styles.wrapper_scroll_to_end}>
+          <TouchableOpacity
+            style={styles.scroll_to_end}
+            onPress={scrollToBottom}
+          >
+            <FontAwesome5 name="arrow-circle-down" size={30} color="black" />
+          </TouchableOpacity>
+          <ScrollView ref={scrollRef}>
+            {records && <OrderList list={entriesValueFilter(records, spec)} />}
+          </ScrollView>
+        </View>
       </View>
     </>
   );
@@ -179,6 +191,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     flexWrap: "wrap",
   },
+  wrapper_scroll_to_end: {
+    flex: 1,
+    position: "relative",
+  },
+  scroll_to_end: {
+    position: "absolute",
+    top: 0,
+    right: 15,
+    zIndex: 10,
+  },
 });
 
-export default TestModal;
+export default RecordModal;
