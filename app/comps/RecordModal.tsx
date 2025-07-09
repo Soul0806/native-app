@@ -1,5 +1,6 @@
 import { fetchRecords } from "@/app/api/fatchRecords";
 import OrderList from "@/app/comps/form/OrderList";
+import ScrollTo from "@/app/comps/form/ScrollTo";
 import { entriesValueFilter } from "@/app/libs/funcs";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React, { useEffect, useRef, useState } from "react";
@@ -77,6 +78,10 @@ function RecordModal(props: any) {
     scrollRef.current?.scrollToEnd({ animated: true });
   };
 
+  const scrollToTop = () => {
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  };
+
   return (
     <>
       {/* <View style={styles.switch}>
@@ -122,14 +127,19 @@ function RecordModal(props: any) {
             )}
           </View>
         </View>
-        <View style={styles.wrapper_scroll_to_end}>
-          <TouchableOpacity
+        <View style={styles.wrapper_scroll_to}>
+          <ScrollTo style={styles.scroll_to_top} handler={scrollToTop}>
+            <Text></Text>
+          </ScrollTo>
+          <ScrollTo style={styles.scroll_to_end} handler={scrollToBottom}>
+            <FontAwesome5 name="arrow-circle-down" size={30} color="black" />
+          </ScrollTo>
+          {/* <TouchableOpacity
             style={styles.scroll_to_end}
             onPress={scrollToBottom}
-          >
-            <FontAwesome5 name="arrow-circle-down" size={30} color="black" />
-          </TouchableOpacity>
+          ></TouchableOpacity> */}
           <ScrollView ref={scrollRef}>
+            {/* {JSON.stringify(convertToEntries(records, ["title", "data"]))} */}
             {records && <OrderList list={entriesValueFilter(records, spec)} />}
           </ScrollView>
         </View>
@@ -191,9 +201,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     flexWrap: "wrap",
   },
-  wrapper_scroll_to_end: {
+  wrapper_scroll_to: {
     flex: 1,
     position: "relative",
+  },
+  scroll_to_top: {
+    position: "absolute",
+    width: "100%",
+    height: 30,
+    zIndex: 9,
   },
   scroll_to_end: {
     position: "absolute",

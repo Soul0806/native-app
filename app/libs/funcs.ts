@@ -19,3 +19,13 @@ export function entriesValueFilter(obj: object, filterStr: string) {
         .filter((entry): entry is [string, string[]] => entry !== undefined )
     );
 }
+
+export function convertToEntries(obj: Record<string, string[]>, keys: string[]) {
+    const objectArray = Object.entries(obj).map(([key, value]) => ({
+        [keys[0]]: key,
+        [keys[1]]: value,
+        }        
+    ))
+
+    return objectArray;
+}
