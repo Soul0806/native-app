@@ -43,3 +43,4 @@ yarn-error.*
 
 app-example
 backend/key.json
+backend/assets/key/

@@ -14,13 +14,11 @@ with (open(input_file, "r", encoding="utf-8") as infile,
      open(output_file, "w", encoding="utf-8") as outfile):
     for line in infile:
         clean_line = line.strip()
-        if not clean_line:
-            continue
-        
+        if (not clean_line) or ("==" in clean_line):
+            continue        
         if "/" in clean_line and len(clean_line) < 7:
-            date = clean_line
-        # print(date)
+            date = clean_line        
         else:
-             result[date].append(clean_line)
+            result[date].append(clean_line)
     
     json.dump(dict(result), outfile, ensure_ascii=False, indent=2)

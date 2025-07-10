@@ -139,7 +139,6 @@ function RecordModal(props: any) {
             onPress={scrollToBottom}
           ></TouchableOpacity> */}
           <ScrollView ref={scrollRef}>
-            {/* {JSON.stringify(convertToEntries(records, ["title", "data"]))} */}
             {records && <OrderList list={entriesValueFilter(records, spec)} />}
           </ScrollView>
         </View>

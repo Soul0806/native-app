@@ -169,7 +169,6 @@ function MainLayout() {
 
   return (
     <View style={styles.container}>
-      <Text className="text-red-500">123</Text>
       <LeftPicker inch={inch} inches={inches} setInch={setInch} />
       <View style={styles.display}>
         <View>

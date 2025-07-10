@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Button } from "react-native-paper";
 import {
   Tabs,
@@ -13,7 +13,7 @@ function PaperTabs() {
     <TabsProvider
       defaultIndex={0}
       // onChangeIndex={handleChangeIndex} optional
-    >      
+    >
       <Tabs
       // uppercase={false} // true/false | default=true (on material v2) | labels are uppercase
       // showTextLabel={false} // true/false | default=false (KEEP PROVIDING LABEL WE USE IT AS KEY INTERNALLY + SCREEN READERS)
@@ -31,7 +31,7 @@ function PaperTabs() {
           <ExploreWitHookExamples />
         </TabScreen>
         <TabScreen label="Flights" icon="airplane" disabled>
-          <View style={{ backgroundColor: "black", flex: 1 }} />          
+          <View style={{ backgroundColor: "black", flex: 1 }} />
         </TabScreen>
         <TabScreen
           label="Trips"
@@ -59,7 +59,6 @@ function ExploreWitHookExamples() {
   const index = useTabIndex();
   return (
     <View style={{ flex: 1 }}>
-      <Text>123</Text>
       <Button onPress={() => goTo(1)}>Go to Flights</Button>
     </View>
   );
