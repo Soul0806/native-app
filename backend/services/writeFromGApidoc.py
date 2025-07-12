@@ -26,7 +26,7 @@ service = build('docs', 'v1', credentials=creds)
 # Step 3: 讀取文件
 DOCUMENT_ID = '1i99hV1NTcG-FOADhQ3yi1HLHghJFIn184w3SOe0NJSQ'
 
-def writeFromGoogleApidoc(): 
+def writeFromGApidoc(): 
     doc = service.documents().get(documentId=DOCUMENT_ID).execute()
                     
     contents = [
@@ -39,4 +39,4 @@ def writeFromGoogleApidoc():
 
     jsonWrite(contents, f'{rootPath}/assets/records_googleApidoc.txt')
 # https://docs.google.com/document/d/1i99hV1NTcG-FOADhQ3yi1HLHghJFIn184w3SOe0NJSQ/edit?tab=t.0#heading=h.mooaq32uc4l0pip install google-api-python-client google-auth google-auth-oauthlib
-writeFromGoogleApidoc()
+writeFromGApidoc()

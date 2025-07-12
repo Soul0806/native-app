@@ -17,6 +17,7 @@ export function entriesValueFilter(obj: object, filterStr: string) {
                 return undefined;
         })
         .filter((entry): entry is [string, string[]] => entry !== undefined )
+        .reverse()
     );
 }
 

@@ -1,6 +1,5 @@
-import { fetchRecords } from "@/app/api/fatchRecords";
+import { fetchRecords } from "@/app/api/fetchRecords";
 import OrderList from "@/app/comps/form/OrderList";
-import ScrollTo from "@/app/comps/form/ScrollTo";
 import { entriesValueFilter } from "@/app/libs/funcs";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React, { useEffect, useRef, useState } from "react";
@@ -31,11 +30,16 @@ function RecordModal(props: any) {
   useEffect(() => {
     const loadRecords = async () => {
       const records = await fetchRecords();
+      console.log(JSON.stringify(records));
       setRecords(records);
     };
 
     loadRecords();
   }, []);
+
+  useEffect(() => {
+    // console.log(JSON.stringify(123));
+  }, [records]);
 
   useEffect(() => {
     // const w = width.length > 0 ? `-${width}` : '';
@@ -82,6 +86,11 @@ function RecordModal(props: any) {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
+  // const refresh = async () => {
+  //   const records = await refreshRecords();
+  //   setRecords(records);
+  // };
+
   return (
     <>
       {/* <View style={styles.switch}>
@@ -127,13 +136,23 @@ function RecordModal(props: any) {
             )}
           </View>
         </View>
+        <View style={styles.tabs}>
+          <Text style={styles.tab}>銷售</Text>
+          <Text style={styles.tab}>庫存</Text>
+        </View>
         <View style={styles.wrapper_scroll_to}>
-          <ScrollTo style={styles.scroll_to_top} handler={scrollToTop}>
-            <Text></Text>
-          </ScrollTo>
-          <ScrollTo style={styles.scroll_to_end} handler={scrollToBottom}>
+          {/* <ScrollTo style={styles.scroll_to_end} handler={scrollToBottom}>
             <FontAwesome5 name="arrow-circle-down" size={30} color="black" />
-          </ScrollTo>
+          </ScrollTo> */}
+          {/* <TouchableOpacity
+            style={{ marginBottom: 20, marginLeft: 10 }}
+            onPress={refresh}
+          >
+            <FontAwesome name="refresh" size={24} color="black" />
+          </TouchableOpacity> */}
+          {/* <ScrollTo style={styles.scroll_to_top} handler={scrollToTop}>
+            <Text></Text>
+          </ScrollTo> */}
           {/* <TouchableOpacity
             style={styles.scroll_to_end}
             onPress={scrollToBottom}
@@ -194,6 +213,19 @@ const styles = StyleSheet.create({
     fontSize: 50,
     marginLeft: 10,
     textAlign: "center",
+  },
+  tabs: {
+    flexDirection: "row",
+    marginLeft: 10,
+    gap: 10,
+  },
+  tab: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: "black",
+    color: "white",
   },
   wrapper_btn: {
     flexDirection: "row",

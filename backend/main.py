@@ -9,8 +9,12 @@ from typing import List, Annotated, Dict
 from pydantic import BaseModel
 from datetime import datetime
 
-from backend.services.get_txt_records import dict_record
+from backend.services.loadRecords import loadRecords
 from backend.getSpecs import spec_list
+from backend.services.writeFromGApidoc import writeFromGApidoc
+from backend.services.txtParseTodict import txtParseToDict
+from backend.services.loadRecords import loadRecords
+# from backend.services import writeFromGApidoc, textParseTodict, loadRecords
 
 # Pydantic 回傳模型
 class Brand(BaseModel):
@@ -69,7 +73,10 @@ def getBrands(db: db_denpendency):
 
 @app.get('/txt/records', response_model=record_model)
 def getBrands(db: db_denpendency):    
-    return dict_record
+    writeFromGApidoc()
+    txtParseToDict()
+    records = loadRecords()    
+    return records
 
 
 @app.post('/brand/insert', response_model=Brand)
@@ -79,3 +86,10 @@ def insertBrand(brand: BrandCreate, db: db_denpendency):
     db.commit()
     db.refresh(db_brand)
     return db_brand
+
+@app.post("/refresh-data")
+def refresh_data():
+    writeFromGApidoc()
+    txtParseToDict()
+    records = loadRecords()    
+    return records

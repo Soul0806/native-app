@@ -10,8 +10,9 @@ import SaleModal from "../comps/SaleModal";
 export default function sale() {
   const [visible, setVisible] = React.useState<boolean>(false);
   const [display, setDisplay] = React.useState("");
+  const [reloadKey, setReloadKey] = React.useState<number>(0);
 
-  const showModal = (e) => {
+  const showModal = (e: string, reloadkey: number) => {
     setDisplay(e);
     setVisible(true);
   };
@@ -22,15 +23,15 @@ export default function sale() {
   const containerStyle = { backgroundColor: "white", padding: 20, margin: 10 };
   return (
     <PaperProvider>
-      <ManipulateButton showModal={showModal} />
+      <ManipulateButton setReloadKey={setReloadKey} showModal={showModal} />
       {display == "sale" && (
         <SaleModal visible={visible} hideModal={hideModal} />
       )}
       {display == "plus" && (
         <InsertModal visible={visible} hideModal={hideModal} />
       )}
-      {display == "search" && (
-        <RecordModal visible={visible} hideModal={hideModal} />
+      {display == "magnify" && (
+        <RecordModal key={reloadKey} visible={visible} hideModal={hideModal} />
       )}
     </PaperProvider>
   );

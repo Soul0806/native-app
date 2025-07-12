@@ -5,14 +5,18 @@
 # from collections import defaultdict
 import ast
 from backend.libs.func import BASE_DIR
-import backend.services.parseAndFormat
+import backend.services.txtParseTodict
 
-file_name = '/assets/output1.txt'
+def loadRecords():
+    file_name = '/assets/output1.txt'
 
-with open(f"{BASE_DIR}{file_name}", "r", encoding="utf-8") as f: 
-    content = f.read();
+    with open(f"{BASE_DIR}{file_name}", "r", encoding="utf-8") as f: 
+        content = f.read();
+        
+    return ast.literal_eval(content)
     
-dict_record = ast.literal_eval(content)
+# dict_record = ast.literal_eval(content)
+
 #      open(output_file, "w", encoding="utf-8") as outfile):
 #     for line in infile:
 #         clean_line = line.strip()

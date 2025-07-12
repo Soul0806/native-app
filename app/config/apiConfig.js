@@ -4,6 +4,7 @@ const API = {
   RECORD: `${API_BASE_URL}/txt/records`,
   BRAND: `${API_BASE_URL}/brands`,
   CRV_SPEC: `${API_BASE_URL}/csv/specs`,
+  REFRESH: `${API_BASE_URL}/refresh-data`,
 };
 
 export { API_BASE_URL };
