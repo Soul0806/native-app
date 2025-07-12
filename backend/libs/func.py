@@ -18,4 +18,12 @@ def jsonAppend(args, file):
 def jsonWrite(args, file):    
     with open(file, 'w', encoding="UTF-8") as f:
         for arg in args:
-            json.dump(arg, f, ensure_ascii=False, indent=2)
+            f.write(arg)
+            # json.dump(arg, f, ensure_ascii=False, indent=2)
+            
+def find_root_by_name(folder_name="backend"):
+    path = Path(__file__).resolve()
+    for parent in path.parents:
+        if parent.name == folder_name:
+            return parent
+    raise RuntimeError("Root folder not found")            

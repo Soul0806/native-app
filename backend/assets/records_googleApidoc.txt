@@ -1294,6 +1294,15 @@ car.no. 9515 car. E250 ]
 補 300 [momo物流車 中華菱利 ]
 225-55-18 x1 1300 [(used) 帶走]
 
+07/11
 
+補 900 [外出 松信路 car.type.CRV3 225-65-17]
+185-14 x800 [(used) car.no car.type.0398 小貨車mazda]
+225-65-17 x4 19000 [BS(one)@305 car.no.3159 car.type.RAV4 225-65-17 佛堂]
 
+07/12
+
+185-60-14 x2 4200 [KD@115 car.no.3920 car.type.vios 175-65-14改185-60-14]
+補 500 [car.no.0019 car.type.santafe 235-55-19]
+tes234
 

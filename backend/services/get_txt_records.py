@@ -7,7 +7,7 @@ import ast
 from backend.libs.func import BASE_DIR
 import backend.services.parseAndFormat
 
-file_name = '/assets/output.txt'
+file_name = '/assets/output1.txt'
 
 with open(f"{BASE_DIR}{file_name}", "r", encoding="utf-8") as f: 
     content = f.read();
