@@ -1,6 +1,7 @@
 import { fetchRecords } from "@/app/api/fetchRecords";
 import OrderList from "@/app/comps/form/OrderList";
 import { entriesValueFilter } from "@/app/libs/funcs";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -23,6 +24,9 @@ function RecordModal(props: any) {
   const [height, setHeight] = useState<string>("");
   const [inch, setInch] = useState<string>("");
   const [records, setRecords] = useState<Record<string, string[]>>({});
+  // const [kbInputText, setKbInputText] = useState("");
+
+  const [search, setSearch] = useState<string>("");
 
   const [file, setFile] = useState<any>("");
   const toggleSwitch = () => setIsisTruck((prev) => !prev);
@@ -46,6 +50,7 @@ function RecordModal(props: any) {
     const h = height.length > 0 ? `-${height}` : "";
     const i = inch.length > 0 ? `-${inch}` : "";
     setSpec(`${width}${h}${i}`);
+    setSearch(`${width}${h}${i}`);
   }, [width, height, inch]);
 
   const handlePress = (val: string) => {
@@ -66,7 +71,7 @@ function RecordModal(props: any) {
     }
   };
 
-  const back = () => {
+  const backward = () => {
     if (+inch.length > 0) {
       setInch(inch.slice(0, -1));
       return;
@@ -84,6 +89,12 @@ function RecordModal(props: any) {
 
   const scrollToTop = () => {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
+  };
+
+  const clear = () => {
+    setWidth("");
+    setHeight("");
+    setInch("");
   };
 
   // const refresh = async () => {
@@ -112,6 +123,7 @@ function RecordModal(props: any) {
             </TouchableOpacity>
           ))}
         </View>
+
         <View style={styles.wrapper_checkspec}>
           <View style={styles.wrapper_spec}>
             <Text style={styles.spec}>
@@ -125,14 +137,22 @@ function RecordModal(props: any) {
           </View>
           <View>
             {spec.length > 0 && (
-              <TouchableOpacity onPress={back}>
-                <FontAwesome5
-                  style={styles.back}
-                  name="backspace"
-                  size={24}
-                  color="red"
-                />
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row", gap: 10 }}>
+                <TouchableOpacity onPress={backward}>
+                  <FontAwesome5
+                    style={styles.manipulate}
+                    name="backspace"
+                    color="red"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={clear}>
+                  <AntDesign
+                    style={styles.manipulate}
+                    name="closecircle"
+                    color="red"
+                  />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         </View>
@@ -192,8 +212,8 @@ const styles = StyleSheet.create({
     fontSize: 40,
     borderRadius: 10,
   },
-  back: {
-    fontSize: 50,
+  manipulate: {
+    fontSize: 40,
   },
   // switch: {
   //   flexDirection: "row",
@@ -207,7 +227,7 @@ const styles = StyleSheet.create({
   //   justifyContent: "center",
   // },
   wrapper_spec: {
-    width: "80%",
+    width: "73%",
   },
   spec: {
     fontSize: 50,

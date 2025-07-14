@@ -1290,7 +1290,7 @@ car.no. 9515 car. E250 ]
 
 07/10
 
-225-45-17 [CN(KPS)@16 car.no.8865 car.type.fortis 改225-45-17]
+225-45-17 x2 7500 [CN(KPS)@16 car.no.8865 car.type.fortis 改225-45-17]
 補 300 [momo物流車 中華菱利 ]
 225-55-18 x1 1300 [(used) 帶走]
 
@@ -1306,3 +1306,26 @@ car.no. 9515 car. E250 ]
 補 500 [car.no.0019 car.type.santafe 235-55-19]
 補 400 [car.no.8366 car.type.bmw118 205-50-17]
 185-60-15 x1 800 [(used) car.no.7618 car.type.coltplus 185-55-15改185-60-15]
+
+07/13
+
+205-65-15 x1 1200 [外出]
+205-65-15 x1 1200 [car.no.2669 car.type.innova 廣德街193巷]
+215-55-17 x1 2000 [car.no.1132 car.type.es200 215-55-17 **下週換]
+245-40-19 x1 2000 [(used) 外出 car.no.5212 car.type.5series 245-40-19]
+補 500 [car.no.8526 car.type.s90 245-45-18]
+補 400 [外加平衡100 car.no.9912 car.type.focus 235-40-18]
+補 500 [car.no.7715 car.type.focus 235-40-18]
+補 500 [car.no.8876 car.type.Q8 285-45-21]
+補 300 [car.no.2151 car.type.vios 185-60-15]
+補 500 [car.no.3976 car.type.RAV4 225-65-17]
+補 300 [car.no.8371 car.type.kicks 205-55-17]
+補 500 [car.no.9938 car.type.accord 225-50-17]
+檢 [car.no.6895 car.type.city 185-55-16]
+補 600 [car.no.5782 car.type.hino 外出 萬錦建設前 前:195-75-16 後:155-13]
+
+
+07/14
+
+補 500 [car.no.9008 car.type.tucsonL 235-55-19]
+檢 [car.no.9983 car.type.ix 275-40-22 補漏 再確認換胎 ]
