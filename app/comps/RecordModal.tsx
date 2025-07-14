@@ -1,9 +1,9 @@
 import { fetchRecords } from "@/app/api/fetchRecords";
 import OrderList from "@/app/comps/form/OrderList";
-import { entriesValueFilter } from "@/app/libs/funcs";
+import { entriesValueFilter, insertAt } from "@/app/libs/funcs";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -45,42 +45,22 @@ function RecordModal(props: any) {
     // console.log(JSON.stringify(123));
   }, [records]);
 
-  useEffect(() => {
-    // const w = width.length > 0 ? `-${width}` : '';
-    const h = height.length > 0 ? `-${height}` : "";
-    const i = inch.length > 0 ? `-${inch}` : "";
-    setSpec(`${width}${h}${i}`);
-    setSearch(`${width}${h}${i}`);
-  }, [width, height, inch]);
+  useEffect(() => {}, [spec]);
 
   const handlePress = (val: string) => {
-    if (width.length >= 3) {
-      if (+width[0] >= 7) {
-        if (inch.length < 3) {
-          setInch((prev) => prev + val);
-        }
-      } else {
-        if (height.length < 2) {
-          setHeight((prev) => prev + val);
-        } else {
-          setInch((prev) => prev + val);
-        }
-      }
-    } else {
-      setWidth((prev) => prev + val);
+    let combiledStr: string = spec + val;
+
+    if (combiledStr.length == 4) {
+      combiledStr = insertAt(combiledStr, "-", 3);
     }
+    if (combiledStr.length == 7) {
+      combiledStr = insertAt(combiledStr, "-", 6);
+    }
+    setSpec(combiledStr);
   };
 
   const backward = () => {
-    if (+inch.length > 0) {
-      setInch(inch.slice(0, -1));
-      return;
-    }
-    if (+height.length > 0) {
-      setHeight(height.slice(0, -1));
-      return;
-    }
-    setWidth(width.slice(0, -1));
+    setSpec((prev) => prev.slice(0, -1));
   };
 
   const scrollToBottom = () => {
@@ -92,9 +72,7 @@ function RecordModal(props: any) {
   };
 
   const clear = () => {
-    setWidth("");
-    setHeight("");
-    setInch("");
+    setSpec("");
   };
 
   // const refresh = async () => {
@@ -127,12 +105,13 @@ function RecordModal(props: any) {
         <View style={styles.wrapper_checkspec}>
           <View style={styles.wrapper_spec}>
             <Text style={styles.spec}>
-              {width.slice(0, 3)}
+              {spec}
+              {/* {width.slice(0, 3)}
               {+height > 0 &&
                 ((+width[0] >= 7 && "-") || (+width[0] < 7 && "/"))}
               {height}
-              {+inch > 0 && "-"}
-              {inch}
+              {+inch > 0 && "-"} 
+              {inch} */}
             </Text>
           </View>
           <View>

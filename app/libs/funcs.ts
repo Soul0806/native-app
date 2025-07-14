@@ -30,3 +30,7 @@ export function convertToEntries(obj: Record<string, string[]>, keys: string[]) 
 
     return objectArray;
 }
+
+export function insertAt(str: string, insert: string, index: number) {
+  return str.slice(0, index) + insert + str.slice(index);
+}

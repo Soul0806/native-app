@@ -1328,4 +1328,7 @@ car.no. 9515 car. E250 ]
 07/14
 
 補 500 [car.no.9008 car.type.tucsonL 235-55-19]
-檢 [car.no.9983 car.type.ix 275-40-22 補漏 再確認換胎 ]
+檢 [car.no.9983 car.type.ix 275-40-22 補漏 再確認換胎]
+185-14 x1 2800 [KD@14 car.no.2376.delica car.type. 185-14 (開發票)]
+氣嘴 x2 300 (自拆代裝)
+
