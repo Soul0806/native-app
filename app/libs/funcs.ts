@@ -34,3 +34,22 @@ export function convertToEntries(obj: Record<string, string[]>, keys: string[]) 
 export function insertAt(str: string, insert: string, index: number) {
   return str.slice(0, index) + insert + str.slice(index);
 }
+
+export function stockfilter(stock: Record<any, any>, filter:string = '') {
+    const re = new RegExp(filter);
+    return Object.entries(stock).map(([key, specWithLocs]) => (
+        Object.fromEntries(
+            Object.entries(specWithLocs).filter(([spec]) => 
+                (re.test(spec))
+            )
+        )
+    ))
+}
+
+// Object.fromEntries(rr
+//                 Object.entries(stockWithLoc).map(([spec, loc]) => {
+//                     if(!re.test(spec)) {
+//                         return [spec, loc];
+//                     }
+//                 ))}
+//             )

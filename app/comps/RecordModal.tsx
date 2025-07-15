@@ -1,7 +1,9 @@
 import { fetchRecords } from "@/app/api/fetchRecords";
+import { fetchSpecs } from "@/app/api/fetchSpecs";
 import IPhoneKeyboard from "@/app/comps/form/KeyboardMock";
 import OrderList from "@/app/comps/form/OrderList";
-import { entriesValueFilter, insertAt } from "@/app/libs/funcs";
+import VTabs from "@/app/comps/tab/VTabs";
+import { entriesValueFilter, insertAt, stockfilter } from "@/app/libs/funcs";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useEffect, useRef, useState } from "react";
@@ -17,10 +19,14 @@ import {
 } from "react-native";
 const numbers = [...Array(10).keys()];
 
+const tabs = ["Sale", "Stock"];
+
 function RecordModal(props: any) {
   const scrollRef = useRef<ScrollView>(null);
   const [spec, setSpec] = useState<string>("");
   const [records, setRecords] = useState<Record<string, string[]> | null>(null);
+  const [tabActive, setTabActive] = useState<string>("Sale");
+  const [stock, setStock] = useState<Record<string, any>>({});
   const [inputText, setInputText] = useState<string>("");
 
   const { visible, hideModal } = props;
@@ -50,14 +56,23 @@ function RecordModal(props: any) {
   };
 
   useEffect(() => {
+    const loadStock = async () => {
+      const specs = await fetchSpecs();
+      setStock(specs);
+    };
+
     const loadRecords = async () => {
       const records = await fetchRecords();
-      console.log(JSON.stringify(records));
       setRecords(records);
     };
 
     loadRecords();
+    loadStock();
   }, []);
+
+  useEffect(() => {
+    console.log(123);
+  }, [stock]);
 
   const handlePress = (val: string) => {
     let combiledStr: string = spec + val;
@@ -159,9 +174,12 @@ function RecordModal(props: any) {
             )}
           </View>
         </View>
-        <View style={styles.tabs}>
-          <Text style={styles.tab}>銷售</Text>
-          <Text style={styles.tab}>庫存</Text>
+        <View style={styles.wrapper_tabs}>
+          <VTabs
+            tabs={tabs}
+            tabActive={tabActive}
+            setTabActive={setTabActive}
+          />
         </View>
         <View style={styles.wrapper_scroll_to}>
           {/* <ScrollTo style={styles.scroll_to_end} handler={scrollToBottom}>
@@ -180,12 +198,42 @@ function RecordModal(props: any) {
             style={styles.scroll_to_end}
             onPress={scrollToBottom}
           ></TouchableOpacity> */}
-          {!records ? (
-            <ActivityIndicator size="small" color="#0000ff" />
+          {tabActive == "Sale" ? (
+            !records ? (
+              <ActivityIndicator size="small" color="#0000ff" />
+            ) : (
+              <ScrollView ref={scrollRef}>
+                <OrderList list={entriesValueFilter(records, spec)} />
+              </ScrollView>
+            )
           ) : (
-            <ScrollView ref={scrollRef}>
-              <OrderList list={entriesValueFilter(records, spec)} />
-            </ScrollView>
+            <>
+              <ScrollView>
+                {stockfilter(stock, spec).map((filteredStock, idx) => (
+                  <View key={idx}>
+                    {Object.entries(filteredStock).map(([spec, locs]) => (
+                      <View key={spec} style={styles.wrapper_stock}>
+                        <Text style={styles.sotck_name}>{spec}</Text>
+                        {Object.entries(locs).map(([loc, num]) => (
+                          <View key={loc} style={styles.wrapper_locate}>
+                            <Text
+                              style={
+                                loc == "貨櫃內"
+                                  ? styles.in_container
+                                  : styles.out_container
+                              }
+                            >
+                              {loc}
+                            </Text>
+                            <Text>{num}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </ScrollView>
+            </>
           )}
         </View>
       </View>
@@ -205,11 +253,12 @@ const styles = StyleSheet.create({
     borderRadius: 25, // 半徑 = 寬高的一半
 
     margin: 10,
-    backgroundColor: "#3498db",
+    backgroundColor: "#007AFF",
     textAlign: "center",
     textAlignVertical: "center", // Android 專用（iOS 不生效）
     // color: "#fff",
     fontSize: 24,
+    color: "white",
     lineHeight: 50, // iOS 對齊用法（等於高度）
   },
   wrapper_inputkey: {
@@ -222,29 +271,44 @@ const styles = StyleSheet.create({
     fontSize: 40,
     borderRadius: 10,
   },
+  wrapper_btn: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    flexWrap: "wrap",
+    padding: 10,
+    maxHeight: 150,
+  },
   manipulate: {
     fontSize: 40,
   },
-  // switch: {
-  //   flexDirection: "row",
-  //   justifyContent: "flex-start",
-  //   alignItems: "center",
-  //   margin: 10,
-  //   gap: 10,
-  // },
-  // check_spec: {
-  //   flexDirection: "row",
-  //   justifyContent: "center",
-  // },
   wrapper_spec: {
     width: "73%",
+  },
+  wrapper_stock: {
+    // flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginLeft: 10,
+    gap: 10,
+    minHeight: 30,
+  },
+  wrapper_locate: {
+    // flex: 1,
+    flexDirection: "row",
+    gap: 20,
+    marginRight: 20,
+  },
+  sotck_name: {
+    minWidth: 100,
+    fontSize: 20,
   },
   spec: {
     fontSize: 50,
     marginLeft: 10,
     textAlign: "center",
   },
-  tabs: {
+  wrapper_tabs: {
     flexDirection: "row",
     marginLeft: 10,
     gap: 10,
@@ -257,13 +321,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     color: "white",
   },
-  wrapper_btn: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    flexWrap: "wrap",
-    padding: 10,
-    maxHeight: 150,
-  },
+
   wrapper_scroll_to: {
     flex: 1,
     position: "relative",
@@ -279,6 +337,24 @@ const styles = StyleSheet.create({
     top: 0,
     right: 15,
     zIndex: 10,
+  },
+  in_container: {
+    backgroundColor: "#FF9500",
+    color: "#333333",
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    fontWeight: 500,
+    alignSelf: "flex-start",
+  },
+  out_container: {
+    backgroundColor: "limegreen",
+    color: "#333333",
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    fontWeight: 500,
+    alignSelf: "flex-start",
   },
 });
 

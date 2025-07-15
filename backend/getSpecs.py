@@ -23,12 +23,15 @@ for _, row in df.iterrows():
         columns = row.dropna()  # 只保留非 NaN 的欄位        
         list_cols = list(columns.items())
         rowNum = len(list_cols)
+        loc = ''
         for i in range(0, rowNum, 2):
             col_x, col_spec = list_cols[i]
             col_x1, col_num = list_cols[i+1] if i+1 < rowNum else (None, 0)
             
             inch = col_spec[-2:]
-            spec_list[inch][col_spec][col_x[:1]] += int(col_num)
+            loc = '貨櫃內' if col_x[:1] == 'A' else '貨櫃外'
+            # spec_list[inch][col_spec][col_x[:1]] += int(col_num)
+            spec_list[inch][col_spec][loc] += int(col_num)
 
 # pprint(spec_list['20']['225/35-20']['A'])      
 
