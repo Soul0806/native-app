@@ -9,11 +9,11 @@ from typing import List, Annotated, Dict
 from pydantic import BaseModel
 from datetime import datetime
 
-from backend.services.loadRecords import loadRecords
-from backend.getSpecs import spec_list
+# from backend.services.loadRecords import loadRecords
 from backend.services.writeFromGApidoc import writeFromGApidoc
 from backend.services.txtParseTodict import txtParseToDict
 from backend.services.loadRecords import loadRecords
+from backend.getSpecs import getStock
 # from backend.services import writeFromGApidoc, textParseTodict, loadRecords
 
 # Pydantic 回傳模型
@@ -64,6 +64,7 @@ async def check_auth(request: Request, call_next):
 
 @app.get('/csv/specs', response_model=spec_model)
 def getSpe(db: db_denpendency):
+    spec_list = getStock()
     return spec_list
 
 @app.get('/brands', response_model=List[Brand])

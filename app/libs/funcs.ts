@@ -46,6 +46,17 @@ export function stockfilter(stock: Record<any, any>, filter:string = '') {
     ))
 }
 
+export function stockfilter1(stock: Record<any, any>, filter:string = '') {
+    const re = new RegExp(filter);
+    return Object.entries(stock).map(([key, specWithLocs]) => (
+        Object.fromEntries(
+            Object.entries(specWithLocs).filter(([spec]) => 
+                (re.test(spec))
+            )
+        )
+    ))
+}
+
 // Object.fromEntries(rr
 //                 Object.entries(stockWithLoc).map(([spec, loc]) => {
 //                     if(!re.test(spec)) {

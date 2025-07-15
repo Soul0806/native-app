@@ -21,7 +21,7 @@ export function ManipulateButton(props: any) {
             icon: "magnify",
             label: "搜尋",
             onPress: function () {
-              setReloadKey((prev: number): number => prev + 1);
+              setReloadKey((prev: number) => prev + 1);
               showModal(this.icon);
             },
           },

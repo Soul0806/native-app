@@ -70,9 +70,7 @@ function RecordModal(props: any) {
     loadStock();
   }, []);
 
-  useEffect(() => {
-    console.log(123);
-  }, [stock]);
+  useEffect(() => {}, [stock]);
 
   const handlePress = (val: string) => {
     let combiledStr: string = spec + val;
@@ -213,7 +211,7 @@ function RecordModal(props: any) {
                   <View key={idx}>
                     {Object.entries(filteredStock).map(([spec, locs]) => (
                       <View key={spec} style={styles.wrapper_stock}>
-                        <Text style={styles.sotck_name}>{spec}</Text>
+                        <Text style={styles.stock_name}>{spec}</Text>
                         {Object.entries(locs).map(([loc, num]) => (
                           <View key={loc} style={styles.wrapper_locate}>
                             <Text
@@ -299,7 +297,7 @@ const styles = StyleSheet.create({
     gap: 20,
     marginRight: 20,
   },
-  sotck_name: {
+  stock_name: {
     minWidth: 100,
     fontSize: 20,
   },

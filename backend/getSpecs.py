@@ -11,6 +11,7 @@ import requests
 
 spec_list = defaultdict(lambda: defaultdict(lambda: defaultdict(int))) 
 file_path = "assets/specs.csv"  # 改成你的檔案路徑
+
 df = pd.read_csv(file_path)
 
 # url = "https://docs.google.com/spreadsheets/d/1xrl--GTr2juevxrdBf0J96yMbw3l9qjdKCyuPxTAZIE/export?format=csv&gid=1393601945"
@@ -18,21 +19,22 @@ df = pd.read_csv(file_path)
 # res.raise_for_status()  # 確保沒錯
 # df = pd.read_csv(io.StringIO(res.text))
 
+def getStock(): 
+    for _, row in df.iterrows():
+            columns = row.dropna()  # 只保留非 NaN 的欄位        
+            list_cols = list(columns.items())
+            rowNum = len(list_cols)
+            loc = ''
+            for i in range(0, rowNum, 2):
+                col_x, col_spec = list_cols[i]
+                col_x1, col_num = list_cols[i+1] if i+1 < rowNum else (None, 0)
+                
+                inch = col_spec[-2:]
+                loc = '貨櫃內' if col_x[:1] == 'A' else '貨櫃外'
+                # spec_list[inch][col_spec][col_x[:1]] += int(col_num)
+                spec_list[inch][col_spec][loc] += int(col_num)
 
-for _, row in df.iterrows():
-        columns = row.dropna()  # 只保留非 NaN 的欄位        
-        list_cols = list(columns.items())
-        rowNum = len(list_cols)
-        loc = ''
-        for i in range(0, rowNum, 2):
-            col_x, col_spec = list_cols[i]
-            col_x1, col_num = list_cols[i+1] if i+1 < rowNum else (None, 0)
-            
-            inch = col_spec[-2:]
-            loc = '貨櫃內' if col_x[:1] == 'A' else '貨櫃外'
-            # spec_list[inch][col_spec][col_x[:1]] += int(col_num)
-            spec_list[inch][col_spec][loc] += int(col_num)
-
+    return spec_list
 # pprint(spec_list['20']['225/35-20']['A'])      
 
 # for row_index, row in df.iterrows():

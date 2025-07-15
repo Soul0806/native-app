@@ -28,4 +28,3 @@ def txtParseToDict():
         
         json.dump(dict(result), outfile, ensure_ascii=False, indent=2)
         
-txtParseToDict()
