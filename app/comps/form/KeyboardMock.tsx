@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   Dimensions,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 
 const { width: screenWidth } = Dimensions.get("window");
 
-const IPhoneKeyboard = () => {
-  const [inputText, setInputText] = useState("");
+type TProps = {
+  // inputText: string;
+  setSpec: Dispatch<SetStateAction<string>>;
+};
+
+const IPhoneKeyboard = ({ setSpec }: TProps) => {
+  // const [inputText, setInputText] = useState("");
   const [isUppercase, setIsUppercase] = useState(false);
 
   // 鍵盤布局 - 模擬iPhone鍵盤
@@ -21,13 +25,14 @@ const IPhoneKeyboard = () => {
     ["z", "x", "c", "v", "b", "n", "m"],
   ];
 
-  const handleKeyPress = (key) => {
-    const letter = isUppercase ? key.toUpperCase() : key;
-    setInputText((prev) => prev + letter);
+  const handleKeyPress = (key: any) => {
+    setSpec((prev) => prev + key);
+    // const letter = isUppercase ? key.toUpperCase() : key;
+    // setInputText((prev) => prev + letter);
   };
 
   const handleBackspace = () => {
-    setInputText((prev) => prev.slice(0, -1));
+    setSpec((prev) => prev.slice(0, -1));
   };
 
   const handleCapsLock = () => {
@@ -35,10 +40,15 @@ const IPhoneKeyboard = () => {
   };
 
   const handleSpace = () => {
-    setInputText((prev) => prev + " ");
+    setSpec((prev) => prev + " ");
   };
 
-  const renderKey = (key, isSpecial = false, specialText = "", flex = 1) => {
+  const renderKey = (
+    key: any,
+    isSpecial = false,
+    specialText = "",
+    flex = 1
+  ) => {
     const displayText = isSpecial
       ? specialText
       : isUppercase
@@ -79,16 +89,6 @@ const IPhoneKeyboard = () => {
 
   return (
     <>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          value={inputText}
-          onChangeText={setInputText}
-          placeholder="在此輸入文字..."
-          multiline
-        />
-      </View>
-
       <View style={styles.keyboard}>
         {/* 第一行 */}
         <View style={styles.row}>
@@ -108,11 +108,11 @@ const IPhoneKeyboard = () => {
         </View>
 
         {/* 第四行 */}
-        <View style={styles.row}>
+        {/* <View style={styles.row}>
           {renderKey("numbers", true, "123", 1.5)}
           {renderKey("space", true, "space", 5)}
           {renderKey("return", true, "return", 1.5)}
-        </View>
+        </View> */}
       </View>
     </>
   );
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     backgroundColor: "#ffffff",
   },
   textInput: {
@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
   keyboard: {
     backgroundColor: "#d1d3d4",
     paddingHorizontal: 3,
-    paddingTop: 10,
-    paddingBottom: 20,
+    paddingVertical: 5,
+    // paddingBottom: 20,
   },
   row: {
     flexDirection: "row",

@@ -1,10 +1,14 @@
 import { fetchRecords } from "@/app/api/fetchRecords";
+import IPhoneKeyboard from "@/app/comps/form/KeyboardMock";
 import OrderList from "@/app/comps/form/OrderList";
 import { entriesValueFilter, insertAt } from "@/app/libs/funcs";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,21 +19,35 @@ const numbers = [...Array(10).keys()];
 
 function RecordModal(props: any) {
   const scrollRef = useRef<ScrollView>(null);
-  const { visible, hideModal } = props;
+  const [spec, setSpec] = useState<string>("");
+  const [records, setRecords] = useState<Record<string, string[]> | null>(null);
+  const [inputText, setInputText] = useState<string>("");
 
+  const { visible, hideModal } = props;
   const [isTruck, setIsisTruck] = useState<boolean>(false);
   const [carType, setCarType] = useState<string>("car");
-  const [spec, setSpec] = useState<string>("");
   const [width, setWidth] = useState<string>("");
   const [height, setHeight] = useState<string>("");
   const [inch, setInch] = useState<string>("");
-  const [records, setRecords] = useState<Record<string, string[]>>({});
   // const [kbInputText, setKbInputText] = useState("");
-
   const [search, setSearch] = useState<string>("");
-
   const [file, setFile] = useState<any>("");
   const toggleSwitch = () => setIsisTruck((prev) => !prev);
+
+  const autoScrollRef = useRef<ScrollView>(null);
+  const hasScrolled = useRef(false); // 防止重複觸發
+
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const y = e.nativeEvent.contentOffset.y;
+
+    if (y >= 50 && !hasScrolled.current) {
+      hasScrolled.current = true;
+      autoScrollRef.current?.scrollTo({ y: 150, animated: true });
+    }
+    if (y < 50) {
+      hasScrolled.current = false;
+    }
+  };
 
   useEffect(() => {
     const loadRecords = async () => {
@@ -41,20 +59,15 @@ function RecordModal(props: any) {
     loadRecords();
   }, []);
 
-  useEffect(() => {
-    // console.log(JSON.stringify(123));
-  }, [records]);
-
-  useEffect(() => {}, [spec]);
-
   const handlePress = (val: string) => {
     let combiledStr: string = spec + val;
-
-    if (combiledStr.length == 4) {
-      combiledStr = insertAt(combiledStr, "-", 3);
-    }
-    if (combiledStr.length == 7) {
-      combiledStr = insertAt(combiledStr, "-", 6);
+    if (!Number.isNaN(combiledStr)) {
+      if (combiledStr.length == 4) {
+        combiledStr = insertAt(combiledStr, "-", 3);
+      }
+      if (combiledStr.length == 7) {
+        combiledStr = insertAt(combiledStr, "-", 6);
+      }
     }
     setSpec(combiledStr);
   };
@@ -79,7 +92,6 @@ function RecordModal(props: any) {
   //   const records = await refreshRecords();
   //   setRecords(records);
   // };
-
   return (
     <>
       {/* <View style={styles.switch}>
@@ -94,13 +106,25 @@ function RecordModal(props: any) {
         {isTruck && <TView>貨車</TView>}
       </View> */}
       <View style={styles.container}>
-        <View style={styles.wrapper_btn}>
-          {numbers.map((n, k) => (
-            <TouchableOpacity key={k} onPress={() => handlePress(n.toString())}>
-              <Text style={styles.circleText}>{n}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <ScrollView
+          ref={autoScrollRef}
+          style={styles.wrapper_inputkey}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          // contentContainerStyle={{ flexGrow: 1 }}
+        >
+          <View style={styles.wrapper_btn}>
+            {numbers.map((n, k) => (
+              <TouchableOpacity
+                key={k}
+                onPress={() => handlePress(n.toString())}
+              >
+                <Text style={styles.circleText}>{n}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <IPhoneKeyboard setSpec={setSpec} />
+        </ScrollView>
 
         <View style={styles.wrapper_checkspec}>
           <View style={styles.wrapper_spec}>
@@ -156,9 +180,13 @@ function RecordModal(props: any) {
             style={styles.scroll_to_end}
             onPress={scrollToBottom}
           ></TouchableOpacity> */}
-          <ScrollView ref={scrollRef}>
-            {records && <OrderList list={entriesValueFilter(records, spec)} />}
-          </ScrollView>
+          {!records ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : (
+            <ScrollView ref={scrollRef}>
+              <OrderList list={entriesValueFilter(records, spec)} />
+            </ScrollView>
+          )}
         </View>
       </View>
     </>
@@ -183,6 +211,9 @@ const styles = StyleSheet.create({
     // color: "#fff",
     fontSize: 24,
     lineHeight: 50, // iOS 對齊用法（等於高度）
+  },
+  wrapper_inputkey: {
+    maxHeight: 150,
   },
   wrapper_checkspec: {
     borderWidth: 1,
@@ -230,6 +261,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     flexWrap: "wrap",
+    padding: 10,
+    maxHeight: 150,
   },
   wrapper_scroll_to: {
     flex: 1,

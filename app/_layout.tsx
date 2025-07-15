@@ -1,11 +1,13 @@
 import { Stack } from "expo-router";
+import { SafeAreaView } from "react-native";
 import "./globals.css";
 
 export default function RootLayout() {
   return (
     <Stack>
-      {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <SafeAreaView>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+      </SafeAreaView>
     </Stack>
   );
 }
