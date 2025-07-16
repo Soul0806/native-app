@@ -2,14 +2,12 @@ import * as React from "react";
 import { StyleSheet } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
-import InsertModal from "@/app/comps/InsertModal";
 import ManipulateButton from "@/app/comps/ManipulateButton";
 import RecordModal from "@/app/comps/RecordModal";
-import SaleModal from "@/app/comps/SaleModal";
 
 export default function sale() {
-  const [visible, setVisible] = React.useState<boolean>(false);
-  const [display, setDisplay] = React.useState("");
+  const [visible, setVisible] = React.useState<boolean>(true);
+  const [display, setDisplay] = React.useState("magnify");
   const [reloadKey, setReloadKey] = React.useState<number>(0);
 
   const showModal = (e: string, reloadkey: number) => {
@@ -19,17 +17,17 @@ export default function sale() {
   const hideModal = () => {
     setVisible(false);
   };
-
+  console.log(display);
   const containerStyle = { backgroundColor: "white", padding: 20, margin: 10 };
   return (
     <PaperProvider>
       <ManipulateButton setReloadKey={setReloadKey} showModal={showModal} />
-      {display == "sale" && (
+      {/* {display == "sale" && (
         <SaleModal visible={visible} hideModal={hideModal} />
       )}
       {display == "plus" && (
         <InsertModal visible={visible} hideModal={hideModal} />
-      )}
+      )} */}
       {display == "magnify" && (
         <RecordModal key={reloadKey} visible={visible} hideModal={hideModal} />
       )}

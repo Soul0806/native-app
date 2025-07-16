@@ -206,6 +206,34 @@ function RecordModal(props: any) {
             )
           ) : (
             <>
+              {/* <ScrollView>
+                {Object.entries(stockfilter1(stock, spec)).map(
+                  ([inch, spec_loc]) => (
+                    <View key={inch}>
+                      <Text style={styles.stock_header}>{inch}</Text>
+                      {Object.entries(spec_loc).map(([spec, locs]) => (
+                        <View key={spec} style={styles.wrapper_stock}>
+                          <Text style={styles.stock_name}>{spec}</Text>
+                          {Object.entries(locs).map(([loc, num]) => (
+                            <View key={loc} style={styles.wrapper_locate}>
+                              <Text
+                                style={
+                                  loc == "貨櫃內"
+                                    ? styles.in_container
+                                    : styles.out_container
+                                }
+                              >
+                                {loc}
+                              </Text>
+                              <Text>{num}</Text>
+                            </View>
+                          ))}
+                        </View>
+                      ))}
+                    </View>
+                  )
+                )}
+              </ScrollView> */}
               <ScrollView>
                 {stockfilter(stock, spec).map((filteredStock, idx) => (
                   <View key={idx}>
@@ -296,6 +324,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 20,
     marginRight: 20,
+  },
+  stock_header: {
+    marginLeft: 10,
+    paddingVertical: 5,
+    backgroundColor: "#ffffff",
+    color: "#333333",
+    fontSize: 20,
+    fontWeight: 800,
   },
   stock_name: {
     minWidth: 100,

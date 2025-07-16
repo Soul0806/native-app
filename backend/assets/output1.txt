@@ -1101,6 +1101,14 @@
     "檢 [car.no.9983 car.type.ix 275-40-22 補漏 再確認換胎]",
     "185-14 x1 2800 [KD@14 car.no.2376.delica car.type. 185-14 (開發票)]",
     "氣嘴 x2 300 (自拆代裝)",
-    "補 300 [car.no.5185 car.type.vios 對面回收]\u000b235-50-18 [car.no.8568 car.type.alpha Line:唐 找235-50-18及裝偵測器]"
+    "補 300 [car.no.5185 car.type.vios 對面回收]\u000b235-50-18 x 2000 [car.no.8568 car.type.alpha Line:唐 找235-50-18及裝偵測器]"
+  ],
+  "07/15": [
+    "補 300 [car.no.0236 car.type.t-toc 215-50-18 樓上住戶]"
+  ],
+  "07/16": [
+    "補 200 [car.no.4226 car.type.小貨車 155-13 Line:吖為 *line再連絡 14年altis框]",
+    "225-45-17 x2 6800 [car.no.6885 car.type.audi-a3 225-45-17 Line:鍾宜親] [進(KPS)225-45-17 x4 售 x 2]",
+    "215-50-18 [(used) 07/07 業務帶走二條 變形 回店更換兩顆 無費用 car.no.8862 car.type.karoq 215-50-18]"
   ]
 }
