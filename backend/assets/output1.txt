@@ -1062,7 +1062,7 @@
     "補 500 [car.no.6210 car.type.a45 235-40-18]",
     "補 300 [car.no.0839 car.type.innova 205-65-15]",
     "215-65-16c x2 4000 [(used) car.no.6805 car.type.t5 215-65-16c 同正業電腦商]",
-    "已收 [換回7/6外出輪胎 car.no.6295 car.type.Caravelle]"
+    "已收 1000 [換回7/6外出輪胎 car.no.6295 car.type.Caravelle]"
   ],
   "07/10": [
     "225-45-17 x2 7500 [CN(KPS)@16 car.no.8865 car.type.fortis 改225-45-17]",
@@ -1110,6 +1110,14 @@
     "補 200 [car.no.4226 car.type.小貨車 155-13 Line:吖為 *line再連絡 14年altis框]",
     "225-45-17 x2 6800 [car.no.6885 car.type.audi-a3 225-45-17 Line:鍾宜親] [進(KPS)225-45-17 x4 售 x 2]",
     "215-50-18 [(used) 07/07 業務帶走二條 變形 回店更換兩顆 無費用 car.no.8862 car.type.karoq 215-50-18]",
-    "檢 [car.type.odyssey 215-55-17]"
+    "檢 [car.type.odyssey 215-55-17]",
+    "補 300 [car.no.2523 car.type.es200 215-55-17]"
+  ],
+  "07/17": [
+    "225-50-18 x1 2800 [(used) car.no.*77* car.type.CC 225-50-18 *外出雙連麥當 小黃找胎續換 Tel:0937-103-558]",
+    "185-14 x1 2700  [KD@15 car.no.6851 car.type.mitsubish- 2.7ton 185-14 外加補200] [進(used)195-75-16 x1 倉庫外]",
+    "700-15 x1 5300 [MX@37 NK@32 BS(協)@37@(OB內胎 500)  自拆裝 萬能科大輪胎行]",
+    "裝軸套 400 [car.no.7129 car.type.verica 155-13改185-65-14]",
+    "檢 100 [car.no.6295 car.type.caravelle 225-65-17]"
   ]
 }

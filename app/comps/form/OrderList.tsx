@@ -1,7 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 
-const OrderList = ({ list }: { list: Record<string, string[]> }) => {
+type TProps = {
+  styleHeader?: ViewStyle;
+  list: Record<string, string[]>;
+};
+
+const OrderList = ({ list }: TProps) => {
   return (
     <View>
       {Object.entries(list).map(([key, values]) => (
@@ -20,7 +25,7 @@ const OrderList = ({ list }: { list: Record<string, string[]> }) => {
 
 const styles = StyleSheet.create({
   list: {
-    marginLeft: 20,
+    marginLeft: 10,
     marginVertical: 10,
   },
 });

@@ -49,8 +49,19 @@ export function stockfilter(stock: Record<any, any>, filter:string = '') {
 export function stockfilter1(stock: Record<any, any>, filter:string = '') {    
     let result:Record<string, Record<string, Record<string, number>>> = {}
     const re = new RegExp(filter); 
+
+   const sortedStock = (function(stock) {
+        return Object.fromEntries(
+            Object.entries(stock).map(([key, valueObj]) => {
+                const sortedValue = Object.fromEntries(
+                Object.keys(valueObj).sort().map(k => [k, valueObj[k]])
+                );
+                return [key, sortedValue];
+            })
+        );
+   })(stock);
     
-    for(const [inch, spec_loc] of Object.entries(stock)) {
+    for(const [inch, spec_loc] of Object.entries(sortedStock)) {
         for(const [spec, loc] of Object.entries(spec_loc)) {            
             if(re.test(spec)) {                
                 if(!result[inch]) {

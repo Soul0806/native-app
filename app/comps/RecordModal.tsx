@@ -27,18 +27,6 @@ function RecordModal(props: any) {
   const [records, setRecords] = useState<Record<string, string[]> | null>(null);
   const [tabActive, setTabActive] = useState<string>("Sale");
   const [stock, setStock] = useState<Record<string, any>>({});
-  const [inputText, setInputText] = useState<string>("");
-
-  const { visible, hideModal } = props;
-  const [isTruck, setIsisTruck] = useState<boolean>(false);
-  const [carType, setCarType] = useState<string>("car");
-  const [width, setWidth] = useState<string>("");
-  const [height, setHeight] = useState<string>("");
-  const [inch, setInch] = useState<string>("");
-  // const [kbInputText, setKbInputText] = useState("");
-  const [search, setSearch] = useState<string>("");
-  const [file, setFile] = useState<any>("");
-  const toggleSwitch = () => setIsisTruck((prev) => !prev);
 
   const autoScrollRef = useRef<ScrollView>(null);
   const hasScrolled = useRef(false); // 防止重複觸發
@@ -56,25 +44,23 @@ function RecordModal(props: any) {
   };
 
   useEffect(() => {
-    const loadStock = async () => {
-      const specs = await fetchSpecs();
-      setStock(specs);
-    };
-
-    const loadRecords = async () => {
-      const records = await fetchRecords();
-      setRecords(records);
-    };
-
-    loadRecords();
-    loadStock();
+    (async () => {
+      try {
+        const [specs, records] = await Promise.all([
+          fetchSpecs(),
+          fetchRecords(),
+        ]);
+        setStock(specs);
+        setRecords(records);
+      } catch (err) {
+        console.error("資料抓取失敗", err);
+      }
+    })();
   }, []);
-
-  useEffect(() => {}, [stock]);
 
   const handlePress = (val: string) => {
     let combiledStr: string = spec + val;
-    if (!Number.isNaN(combiledStr)) {
+    if (/^\d/.test(combiledStr)) {
       if (combiledStr.length == 4) {
         combiledStr = insertAt(combiledStr, "-", 3);
       }
@@ -82,56 +68,29 @@ function RecordModal(props: any) {
         combiledStr = insertAt(combiledStr, "-", 6);
       }
     }
-    setSpec(combiledStr);
+    return () => setSpec(combiledStr);
   };
 
   const backward = () => {
     setSpec((prev) => prev.slice(0, -1));
   };
 
-  const scrollToBottom = () => {
-    scrollRef.current?.scrollToEnd({ animated: true });
-  };
-
-  const scrollToTop = () => {
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
-  };
-
   const clear = () => {
     setSpec("");
   };
 
-  // const refresh = async () => {
-  //   const records = await refreshRecords();
-  //   setRecords(records);
-  // };
   return (
     <>
-      {/* <View style={styles.switch}>
-        <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isTruck ? "#f5dd4b" : "#f4f3f4"}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch}
-          value={isTruck}
-        />
-        {!isTruck && <TView>轎,休旅車</TView>}
-        {isTruck && <TView>貨車</TView>}
-      </View> */}
       <View style={styles.container}>
         <ScrollView
           ref={autoScrollRef}
           style={styles.wrapper_inputkey}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          // contentContainerStyle={{ flexGrow: 1 }}
         >
           <View style={styles.wrapper_btn}>
-            {numbers.map((n, k) => (
-              <TouchableOpacity
-                key={k}
-                onPress={() => handlePress(n.toString())}
-              >
+            {numbers.map((n, idx) => (
+              <TouchableOpacity key={idx} onPress={handlePress(n.toString())}>
                 <Text style={styles.circleText}>{n}</Text>
               </TouchableOpacity>
             ))}
@@ -141,15 +100,7 @@ function RecordModal(props: any) {
 
         <View style={styles.wrapper_checkspec}>
           <View style={styles.wrapper_spec}>
-            <Text style={styles.spec}>
-              {spec}
-              {/* {width.slice(0, 3)}
-              {+height > 0 &&
-                ((+width[0] >= 7 && "-") || (+width[0] < 7 && "/"))}
-              {height}
-              {+inch > 0 && "-"} 
-              {inch} */}
-            </Text>
+            <Text style={styles.spec}>{spec}</Text>
           </View>
           <View>
             {spec.length > 0 && (
@@ -282,7 +233,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#007AFF",
     textAlign: "center",
     textAlignVertical: "center", // Android 專用（iOS 不生效）
-    // color: "#fff",
     fontSize: 24,
     color: "white",
     lineHeight: 50, // iOS 對齊用法（等於高度）
@@ -320,10 +270,12 @@ const styles = StyleSheet.create({
     minHeight: 30,
   },
   wrapper_locate: {
-    // flex: 1,
     flexDirection: "row",
     gap: 20,
     marginRight: 20,
+  },
+  sale_header: {
+    fontWeight: 800,
   },
   stock_header: {
     marginLeft: 10,
@@ -336,6 +288,7 @@ const styles = StyleSheet.create({
   stock_name: {
     minWidth: 100,
     fontSize: 20,
+    marginLeft: 10,
   },
   spec: {
     fontSize: 50,
@@ -355,7 +308,6 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     color: "white",
   },
-
   wrapper_scroll_to: {
     flex: 1,
     position: "relative",
