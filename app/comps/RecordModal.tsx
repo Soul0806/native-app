@@ -3,7 +3,7 @@ import { fetchSpecs } from "@/app/api/fetchSpecs";
 import IPhoneKeyboard from "@/app/comps/form/KeyboardMock";
 import OrderList from "@/app/comps/form/OrderList";
 import VTabs from "@/app/comps/tab/VTabs";
-import { entriesValueFilter, insertAt, stockfilter } from "@/app/libs/funcs";
+import { entriesValueFilter, insertAt, stockfilter1 } from "@/app/libs/funcs";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useEffect, useRef, useState } from "react";
@@ -206,7 +206,7 @@ function RecordModal(props: any) {
             )
           ) : (
             <>
-              {/* <ScrollView>
+              <ScrollView>
                 {Object.entries(stockfilter1(stock, spec)).map(
                   ([inch, spec_loc]) => (
                     <View key={inch}>
@@ -233,8 +233,8 @@ function RecordModal(props: any) {
                     </View>
                   )
                 )}
-              </ScrollView> */}
-              <ScrollView>
+              </ScrollView>
+              {/* <ScrollView>
                 {stockfilter(stock, spec).map((filteredStock, idx) => (
                   <View key={idx}>
                     {Object.entries(filteredStock).map(([spec, locs]) => (
@@ -258,7 +258,7 @@ function RecordModal(props: any) {
                     ))}
                   </View>
                 ))}
-              </ScrollView>
+              </ScrollView> */}
             </>
           )}
         </View>
