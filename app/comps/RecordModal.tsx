@@ -1,9 +1,10 @@
 import { fetchRecords } from "@/app/api/fetchRecords";
 import { fetchSpecs } from "@/app/api/fetchSpecs";
 import IPhoneKeyboard from "@/app/comps/form/KeyboardMock";
-import OrderList from "@/app/comps/form/OrderList";
+import Record from "@/app/comps/tab/record/Record";
+import Stock from "@/app/comps/tab/stock/Stock";
 import VTabs from "@/app/comps/tab/VTabs";
-import { entriesValueFilter, insertAt, stockfilter1 } from "@/app/libs/funcs";
+import { entriesValueFilter, insertAt } from "@/app/libs/funcs";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useEffect, useRef, useState } from "react";
@@ -19,13 +20,13 @@ import {
 } from "react-native";
 const numbers = [...Array(10).keys()];
 
-const tabs = ["Sale", "Stock"];
+const tabs = ["Record", "Stock"];
 
 function RecordModal(props: any) {
   const scrollRef = useRef<ScrollView>(null);
   const [spec, setSpec] = useState<string>("");
   const [records, setRecords] = useState<Record<string, string[]> | null>(null);
-  const [tabActive, setTabActive] = useState<string>("Sale");
+  const [tabActive, setTabActive] = useState<string>("Record");
   const [stock, setStock] = useState<Record<string, any>>({});
 
   const autoScrollRef = useRef<ScrollView>(null);
@@ -79,49 +80,61 @@ function RecordModal(props: any) {
     setSpec("");
   };
 
+  const tabLayout = () => {
+    switch (tabActive) {
+      case "Record":
+        return !records ? (
+          <ActivityIndicator size="small" color="#0000ff" />
+        ) : (
+          <Record list={entriesValueFilter(records, spec)} />
+        );
+      case "Stock":
+        return !stock ? (
+          <ActivityIndicator size="small" color="#0000ff" />
+        ) : (
+          <Stock stock={stock} spec={spec} />
+        );
+    }
+  };
+
   return (
     <>
       <View style={styles.container}>
         <ScrollView
           ref={autoScrollRef}
-          style={styles.wrapper_inputkey}
+          style={styles.wrapper_inputArea}
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
-          <View style={styles.wrapper_btn}>
+          <View style={styles.wrapper_inputArea_wpBtn}>
             {numbers.map((n, idx) => (
               <TouchableOpacity key={idx} onPress={handlePress(n.toString())}>
-                <Text style={styles.circleText}>{n}</Text>
+                <Text style={styles.wrapper_inputArea_circle}>{n}</Text>
               </TouchableOpacity>
             ))}
           </View>
           <IPhoneKeyboard setSpec={setSpec} />
         </ScrollView>
-
-        <View style={styles.wrapper_checkspec}>
-          <View style={styles.wrapper_spec}>
-            <Text style={styles.spec}>{spec}</Text>
-          </View>
-          <View>
-            {spec.length > 0 && (
-              <View style={{ flexDirection: "row", gap: 10 }}>
-                <TouchableOpacity onPress={backward}>
-                  <FontAwesome5
-                    style={styles.manipulate}
-                    name="backspace"
-                    color="red"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={clear}>
-                  <AntDesign
-                    style={styles.manipulate}
-                    name="closecircle"
-                    color="red"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
+        <View style={styles.wrapper_searchArea}>
+          <Text style={styles.wrapper_searchArea_spec}>{spec}</Text>
+          {spec.length > 0 && (
+            <View style={styles.wrapper_searchArea_wpManipulate}>
+              <TouchableOpacity onPress={backward}>
+                <FontAwesome5
+                  style={styles.wrapper_searchArea_manipulate}
+                  name="backspace"
+                  color="red"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={clear}>
+                <AntDesign
+                  style={styles.wrapper_searchArea_manipulate}
+                  name="closecircle"
+                  color="red"
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         <View style={styles.wrapper_tabs}>
           <VTabs
@@ -130,89 +143,7 @@ function RecordModal(props: any) {
             setTabActive={setTabActive}
           />
         </View>
-        <View style={styles.wrapper_scroll_to}>
-          {/* <ScrollTo style={styles.scroll_to_end} handler={scrollToBottom}>
-            <FontAwesome5 name="arrow-circle-down" size={30} color="black" />
-          </ScrollTo> */}
-          {/* <TouchableOpacity
-            style={{ marginBottom: 20, marginLeft: 10 }}
-            onPress={refresh}
-          >
-            <FontAwesome name="refresh" size={24} color="black" />
-          </TouchableOpacity> */}
-          {/* <ScrollTo style={styles.scroll_to_top} handler={scrollToTop}>
-            <Text></Text>
-          </ScrollTo> */}
-          {/* <TouchableOpacity
-            style={styles.scroll_to_end}
-            onPress={scrollToBottom}
-          ></TouchableOpacity> */}
-          {tabActive == "Sale" ? (
-            !records ? (
-              <ActivityIndicator size="small" color="#0000ff" />
-            ) : (
-              <ScrollView ref={scrollRef}>
-                <OrderList list={entriesValueFilter(records, spec)} />
-              </ScrollView>
-            )
-          ) : (
-            <>
-              <ScrollView>
-                {Object.entries(stockfilter1(stock, spec)).map(
-                  ([inch, spec_loc]) => (
-                    <View key={inch}>
-                      <Text style={styles.stock_header}>{inch}</Text>
-                      {Object.entries(spec_loc).map(([spec, locs]) => (
-                        <View key={spec} style={styles.wrapper_stock}>
-                          <Text style={styles.stock_name}>{spec}</Text>
-                          {Object.entries(locs).map(([loc, num]) => (
-                            <View key={loc} style={styles.wrapper_locate}>
-                              <Text
-                                style={
-                                  loc == "貨櫃內"
-                                    ? styles.in_container
-                                    : styles.out_container
-                                }
-                              >
-                                {loc}
-                              </Text>
-                              <Text>{num}</Text>
-                            </View>
-                          ))}
-                        </View>
-                      ))}
-                    </View>
-                  )
-                )}
-              </ScrollView>
-              {/* <ScrollView>
-                {stockfilter(stock, spec).map((filteredStock, idx) => (
-                  <View key={idx}>
-                    {Object.entries(filteredStock).map(([spec, locs]) => (
-                      <View key={spec} style={styles.wrapper_stock}>
-                        <Text style={styles.stock_name}>{spec}</Text>
-                        {Object.entries(locs).map(([loc, num]) => (
-                          <View key={loc} style={styles.wrapper_locate}>
-                            <Text
-                              style={
-                                loc == "貨櫃內"
-                                  ? styles.in_container
-                                  : styles.out_container
-                              }
-                            >
-                              {loc}
-                            </Text>
-                            <Text>{num}</Text>
-                          </View>
-                        ))}
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </ScrollView> */}
-            </>
-          )}
-        </View>
+        <View style={styles.wrapper_tabLayout}>{tabLayout()}</View>
       </View>
     </>
   );
@@ -221,10 +152,22 @@ function RecordModal(props: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
-    gap: 15,
+    padding: 5,
+    gap: 20,
   },
-  circleText: {
+  wrapper_inputArea: {
+    maxHeight: 150,
+    // borderWidth: 3,
+  },
+  wrapper_inputArea_wpBtn: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignContent: "center",
+    flexWrap: "wrap",
+    // padding: 3,
+    minHeight: 150,
+  },
+  wrapper_inputArea_circle: {
     width: 50,
     height: 50,
     borderRadius: 25, // 半徑 = 寬高的一半
@@ -237,67 +180,31 @@ const styles = StyleSheet.create({
     color: "white",
     lineHeight: 50, // iOS 對齊用法（等於高度）
   },
-  wrapper_inputkey: {
-    maxHeight: 150,
-  },
-  wrapper_checkspec: {
+  wrapper_searchArea: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     borderWidth: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    fontSize: 40,
     borderRadius: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginHorizontal: 5,
+    marginBottom: 5,
+    // fontSize: 40,
   },
-  wrapper_btn: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    flexWrap: "wrap",
-    padding: 10,
-    maxHeight: 150,
-  },
-  manipulate: {
+  wrapper_searchArea_spec: {
     fontSize: 40,
   },
-  wrapper_spec: {
-    width: "73%",
-  },
-  wrapper_stock: {
-    // flex: 1,
+  wrapper_searchArea_wpManipulate: {
     flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    marginLeft: 10,
     gap: 10,
-    minHeight: 30,
   },
-  wrapper_locate: {
-    flexDirection: "row",
-    gap: 20,
-    marginRight: 20,
-  },
-  sale_header: {
-    fontWeight: 800,
-  },
-  stock_header: {
-    marginLeft: 10,
-    paddingVertical: 5,
-    backgroundColor: "#ffffff",
-    color: "#333333",
-    fontSize: 20,
-    fontWeight: 800,
-  },
-  stock_name: {
-    minWidth: 100,
-    fontSize: 20,
-    marginLeft: 10,
-  },
-  spec: {
-    fontSize: 50,
-    marginLeft: 10,
-    textAlign: "center",
+  wrapper_searchArea_manipulate: {
+    fontSize: 40,
   },
   wrapper_tabs: {
     flexDirection: "row",
-    marginLeft: 10,
+    marginLeft: 5,
     gap: 10,
   },
   tab: {
@@ -308,7 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     color: "white",
   },
-  wrapper_scroll_to: {
+  wrapper_tabLayout: {
     flex: 1,
     position: "relative",
   },
@@ -323,24 +230,6 @@ const styles = StyleSheet.create({
     top: 0,
     right: 15,
     zIndex: 10,
-  },
-  in_container: {
-    backgroundColor: "#FF9500",
-    color: "#333333",
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    fontWeight: 500,
-    alignSelf: "flex-start",
-  },
-  out_container: {
-    backgroundColor: "limegreen",
-    color: "#333333",
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    fontWeight: 500,
-    alignSelf: "flex-start",
   },
 });
 

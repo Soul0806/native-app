@@ -6,7 +6,7 @@ type TProps = {
   list: Record<string, string[]>;
 };
 
-const OrderList = ({ list }: TProps) => {
+const OrderList = ({ styleHeader, list }: TProps) => {
   return (
     <View>
       {Object.entries(list).map(([key, values]) => (
