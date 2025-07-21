@@ -20,7 +20,10 @@ import {
 } from "react-native";
 const numbers = [...Array(10).keys()];
 
-const tabs = ["Record", "Stock"];
+const tabs = [
+  { key: "Record", name: "銷售" },
+  { key: "Stock", name: "庫存" },
+];
 
 function RecordModal(props: any) {
   const scrollRef = useRef<ScrollView>(null);

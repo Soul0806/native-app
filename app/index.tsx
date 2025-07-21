@@ -2,6 +2,7 @@ import * as React from "react";
 import { StyleSheet } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
+import InsertModal from "@/app/comps/InsertModal";
 import ManipulateButton from "@/app/comps/ManipulateButton";
 import RecordModal from "@/app/comps/RecordModal";
 
@@ -17,7 +18,7 @@ export default function sale() {
   const hideModal = () => {
     setVisible(false);
   };
-  console.log(display);
+
   const containerStyle = { backgroundColor: "white", padding: 20, margin: 10 };
   return (
     <PaperProvider>
@@ -25,12 +26,11 @@ export default function sale() {
       {/* {display == "sale" && (
         <SaleModal visible={visible} hideModal={hideModal} />
       )}
-      {display == "plus" && (
-        <InsertModal visible={visible} hideModal={hideModal} />
-      )} */}
-      {display == "magnify" && (
-        <RecordModal key={reloadKey} visible={visible} hideModal={hideModal} />
-      )}
+      // {display == "plus" && (r
+      //   <InsertModal visible={visible} hideModal={hideModal} />
+      // )} */}
+      {display == "plus" && <InsertModal />}
+      {display == "magnify" && <RecordModal key={reloadKey} />}
     </PaperProvider>
   );
 }

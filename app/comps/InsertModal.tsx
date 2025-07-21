@@ -1,125 +1,95 @@
-import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
-import BaseModal from "./modal/BaseModal";
+import { fetchSpecs } from "@/app/api/fetchSpecs";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { fetchBrands } from "../api/fetchBrands";
-import config from "../config/apiConfig";
-import Indicator from "./indicator/indicator";
+// type Props = {
+//   visible: boolean;
+//   hideModal: () => any;
+// };
 
-const InsertModal = (props: any) => {
-  const { visible, hideModal } = props;
-  const [brand, setBrand] = useState<string>("");
-  const [allBrands, setAllBrands] = useState<any | []>([]);
-  const [error, setError] = useState<boolean>(false);
+const InsertModal = () => {
+  const [spec, setSpec] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
-    const loadBrands = async () => {
-      const brands = await fetchBrands();
-      setAllBrands(brands);
+    const loadSpecs = async () => {
+      const specs = await fetchSpecs();
+      const inchSpec = Object.fromEntries(
+        Object.entries(specs).map(([key, value]) => {
+          if (typeof value === "object" && value !== null) {
+            const specList = Object.keys(value);
+            return [key, specList];
+          }
+          return [];
+        })
+      );
+      setSpec(inchSpec);
     };
-    loadBrands();
+    loadSpecs();
   }, []);
 
-  const handleBrandChange = (brand: string) => {
-    setError(false);
-    setBrand(brand);
-  };
-
-  const handleSubmit = async () => {
-    const existed = allBrands.some(
-      (b: any) => brand.toLowerCase() == b["name"].toLowerCase()
-    );
-
-    if (existed) {
-      setError(true);
-      return;
-    }
-    const payload = {
-      name: brand,
-    };
-
-    try {
-      const res = await fetch(`${config.API_BASE_URL}/brand/insert`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "00001111",
-        },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("提交失敗");
-      const data = await res.json();
-      setAllBrands((prev: any) => [...prev, data]);
-    } catch (err) {
-      Alert.alert("錯誤");
-    }
-  };
-
   return (
-    <>
-      <BaseModal visible={visible} hideModal={hideModal}>
-      <TouchableOpacity style={styles.tab_car}>
-          <Text>新增汽車規格</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab_brand}>
-          <Text>新增輪胎規格</Text>
-        </TouchableOpacity>
-        <Text>現有輪胎品牌</Text>
-        <View style={styles.row_list}>
-          {allBrands?.length === 0 ? (
-            <Indicator />
-          ) : (
-            allBrands?.map((brand: any) => (
-              <Text key={brand.name} style={styles.item}>
-                {brand.name}
-              </Text>
-            ))
-          )}
+    <ScrollView>
+      {Object.entries(spec).map(([inch, specs]) => (
+        <View key={inch}>
+          <Text>{inch}</Text>
+          {specs.map((spec: string) => (
+            <Text key={spec}>{spec}</Text>
+          ))}
         </View>
-        <Text style={styles.label}>新增輪胎品牌</Text>
-        <TextInput value={brand} onChangeText={handleBrandChange} />
-        {error && <Text>品牌已存在</Text>}
-        <Button onPress={handleSubmit}>確定</Button>
-      </BaseModal>
-    </>
+      ))}
+    </ScrollView>
   );
 };
 
+export default InsertModal;
+
 const styles = StyleSheet.create({
-  label: {
-    marginVertical: 20,
+  stockContainer: {
+    // paddingHorizontal: 15,
   },
-  row_list: {
+  stock_sectionHeader: {
+    padding: 5,
+    marginBottom: 5,
+    backgroundColor: "#ffffff",
+    color: "#333333",
+    fontSize: 22,
+    fontWeight: 800,
+  },
+  stock_sectionRow: {
+    // flex: 1,
     flexDirection: "row",
-    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginLeft: 10,
+    gap: 20,
+    paddingVertical: 3,
   },
-  item: {
-    marginVertical: 5,
-    marginRight: 5,
+  stock_sectionRow_wpLocAndQan: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
   },
-  tab_car: {
-    position: "absolute",
-    top: -40,
-    left: 0,
-    zIndex: 10,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    height: 40,
-    padding: 10,
-    backgroundColor: "gray",
+  stock_sectionRow_name: {
+    minWidth: 100,
+    fontSize: 20,
+    marginLeft: 10,
   },
-  tab_brand: {
-    position: "absolute",
-    top: -40,
-    left: 100,
-    zIndex: -1,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    height: 40,
-    padding: 10,
-    backgroundColor: "white",
+  stock_sectionRow_inContainer: {
+    backgroundColor: "#FF9500",
+    color: "#333333",
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    fontWeight: 500,
+    alignSelf: "flex-start",
+  },
+  stock_sectionRow_outContainer: {
+    backgroundColor: "limegreen",
+    color: "#333333",
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    fontWeight: 500,
+    alignSelf: "flex-start",
   },
 });
-
-export default InsertModal;

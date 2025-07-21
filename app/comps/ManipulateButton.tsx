@@ -25,13 +25,13 @@ export function ManipulateButton(props: any) {
               showModal(this.icon);
             },
           },
-          // {
-          //   icon: "plus",
-          //   label: "新增",
-          //   onPress: function () {
-          //     showModal(this.icon);
-          //   },
-          // },
+          {
+            icon: "plus",
+            label: "新增",
+            onPress: function () {
+              showModal(this.icon);
+            },
+          },
           {
             icon: "sale",
             label: "銷售",
