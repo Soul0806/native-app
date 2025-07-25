@@ -1,5 +1,5 @@
 import { fetchSpecs } from "@/app/api/fetchSpecs";
-import { addTire, getAreas, getTiresByAreaName } from "@/db";
+import { getAreas, getTiresByAreaName } from "@/db";
 import React, { useEffect, useState } from "react";
 import {
   ActionSheetIOS,
@@ -9,6 +9,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+type SpecList = {
+  spec: string;
+  quantity: number;
+  area: number;
+};
 
 type Area = {
   id: number;
@@ -25,13 +31,14 @@ type Tires = {
 };
 
 const InsertModal = () => {
-  const [spec, setSpec] = useState<Record<string, string[]>>({});
+  const [spec, setSpec] = useState<Record<string, SpecList[]>>({});
   const [areas, setAreas] = useState<Area[]>([]);
+  const [areaId, setAreaId] = useState<number>(3);
   const [selectedValue, setSelectedValue] = useState("倉庫內");
   const [tireRecords, setTireRecords] = useState<Tires[]>([]);
 
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [unfolderSpec, setUnfolderSpec] = useState<Record<string, string[]>>(
+  const [unfolderSpec, setUnfolderSpec] = useState<Record<string, SpecList[]>>(
     {}
   );
   const [text, setText] = useState("");
@@ -48,27 +55,6 @@ const InsertModal = () => {
   };
 
   useEffect(() => {
-    const loadSpecs = async () => {
-      const specs = await fetchSpecs();
-      const inchSpec = Object.fromEntries(
-        Object.entries(specs).map(([key, value]) => {
-          if (typeof value === "object" && value !== null) {
-            const specList = Object.keys(value);
-
-            const obj = specList.map((spec) => {
-              const item = tireRecords.find((record) => record.spec === spec);
-              return { spec: spec, quantity: item ? item.quantity : 0 };
-              // }
-            });
-            console.log(JSON.stringify(obj, null, 2));
-            return [key, specList];
-          }
-          return [];
-        })
-      );
-      setSpec(inchSpec);
-    };
-
     const loadTires = async (area: string) => {
       const tireRecords = await getTiresByAreaName(area);
       const areas = await getAreas();
@@ -77,14 +63,48 @@ const InsertModal = () => {
     };
 
     loadTires(selectedValue);
-    loadSpecs();
+
     // loadAreas();
     // setAreas();
     // initDB();
   }, []);
 
   useEffect(() => {
+    const loadSpecs = async () => {
+      // // get current area id and set
+      // const areaId = areas.find((a) => a.name == selectedValue)?.id;
+      // setAreaId(areaId);
+
+      const specs = await fetchSpecs();
+      const inchSpec = Object.fromEntries(
+        Object.entries(specs).map(([key, value]) => {
+          if (typeof value === "object" && value !== null) {
+            const specList = Object.keys(value).map((spec) => {
+              const item = tireRecords.find((record) => {
+                // console.log(record.area_id, areaId);
+                return record.spec === spec && record.area_id === areaId;
+              });
+              return {
+                spec: spec,
+                quantity: item ? item.quantity : 0,
+                area: item?.area_id ?? areaId,
+              };
+              // }
+            });
+            return [key, specList];
+          }
+          return [];
+        })
+      );
+      setSpec(inchSpec);
+    };
+
+    loadSpecs();
+  }, [areas]);
+
+  useEffect(() => {
     toggleSection();
+    console.log(spec);
   }, [spec]);
 
   useEffect(() => {
@@ -135,14 +155,31 @@ const InsertModal = () => {
 
   const stockUpdated = async (spec: string, area: string, quantity: number) => {
     try {
-      await addTire(spec, area, quantity);
-      const areaObj = areas.find((item) => item.name === selectedValue);
-      for (const record of tireRecords) {
-        if (record.spec === spec && record.area_id === areaObj?.id) {
-          record.quantity = record.quantity + quantity;
-          break;
-        }
-      }
+      // await addTire(spec, area, quantity);
+
+      setSpec((prev) => {
+        return Object.fromEntries(
+          Object.entries(prev).map(([inch, specList]) => {
+            const group = specList.map((item) => {
+              if (item.spec === spec && item.area === areaId) {
+                item.quantity += quantity;
+              }
+              return item;
+            });
+            // console.log(inch, group);
+            return [inch, group];
+          })
+        );
+
+        // return prev;
+      });
+      // const areaObj = areas.find((item) => item.name === selectedValue);
+      // for (const record of tireRecords) {
+      //   if (record.spec === spec && record.area_id === areaObj?.id) {
+      //     record.quantity = record.quantity + quantity;
+      //     break;
+      //   }
+      // }
     } catch (err) {
       if (err instanceof Error) {
         console.error("❌", err.message);
@@ -171,22 +208,24 @@ const InsertModal = () => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.stockContainer}>
-        {Object.entries(unfolderSpec).map(([inch, specs]) => (
+        {Object.entries(unfolderSpec).map(([inch, specList]) => (
           <View key={inch}>
             <TouchableOpacity onPress={() => toggleSection(inch)}>
               <Text style={styles.stock_sectionHeader}>{inch}</Text>
             </TouchableOpacity>
-            {specs.map((spec: string) => (
-              <View key={spec} style={styles.stock_sectionRow}>
-                <Text style={styles.stock_sectionRow_name}>{spec}</Text>
-                {existedSpec(spec)}
+            {specList.map((item) => (
+              // <Text>{item.quantity}</Text>
+              <View key={item.spec} style={styles.stock_sectionRow}>
+                <Text style={styles.stock_sectionRow_name}>{item.spec}</Text>
+                <Text>{item.quantity}</Text>
+                <Text>{item.area}</Text>
                 <TouchableOpacity
-                  onPress={() => stockUpdated(spec, selectedValue, -1)}
+                  onPress={() => stockUpdated(item.spec, selectedValue, -1)}
                 >
                   <Text style={styles.stock_abstract}>- 減少</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => stockUpdated(spec, selectedValue, 1)}
+                  onPress={() => stockUpdated(item.spec, selectedValue, 1)}
                 >
                   <Text style={styles.stock_add}>+ 增加</Text>
                 </TouchableOpacity>
