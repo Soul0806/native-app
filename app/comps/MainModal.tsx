@@ -25,7 +25,7 @@ const tabs = [
   { key: "Stock", name: "庫存" },
 ];
 
-function RecordModal(props: any) {
+function MainModal(props: any) {
   const scrollRef = useRef<ScrollView>(null);
   const [spec, setSpec] = useState<string>("");
   const [records, setRecords] = useState<Record<string, string[]> | null>(null);
@@ -236,4 +236,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecordModal;
+export default MainModal;

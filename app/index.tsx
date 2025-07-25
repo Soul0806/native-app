@@ -3,8 +3,8 @@ import { StyleSheet } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
 import InsertModal from "@/app/comps/InsertModal";
+import RecordModal from "@/app/comps/MainModal";
 import ManipulateButton from "@/app/comps/ManipulateButton";
-import RecordModal from "@/app/comps/RecordModal";
 
 export default function sale() {
   const [visible, setVisible] = React.useState<boolean>(true);

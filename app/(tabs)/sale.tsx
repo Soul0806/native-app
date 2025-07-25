@@ -3,8 +3,8 @@ import { StyleSheet } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
 import InsertModal from "../comps/InsertModal";
+import RecordModal from "../comps/MainModal";
 import ManipulateButton from "../comps/ManipulateButton";
-import RecordModal from "../comps/RecordModal";
 import SaleModal from "../comps/SaleModal";
 
 export default function sale() {

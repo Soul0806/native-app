@@ -32,13 +32,13 @@ export function ManipulateButton(props: any) {
               showModal(this.icon);
             },
           },
-          {
-            icon: "sale",
-            label: "銷售",
-            onPress: function () {
-              showModal(this.icon);
-            },
-          },
+          // {
+          //   icon: "sale",
+          //   label: "銷售",
+          //   onPress: function () {
+          //     showModal(this.icon);
+          //   },
+          // },
         ]}
         onStateChange={onStateChange}
         onPress={() => {
