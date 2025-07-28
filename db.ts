@@ -43,6 +43,7 @@ export const initDB = async () => {
     );
   `);
 
+    initDefaultAreas();
 };
 
 // 取得所有区域
@@ -137,9 +138,7 @@ export const addTire = async (spec: string, areaName: string, quantity: number):
     const existingTire = await db.getAllAsync(
       'SELECT id, quantity FROM tires_1 WHERE spec = ? AND area_id = ?;',
       [spec, areaId]
-    );
-
-    console.log(existingTire);
+    );    
     
     if (existingTire.length > 0) {
       // 如果存在，增加數量
@@ -170,7 +169,7 @@ export const addTire = async (spec: string, areaName: string, quantity: number):
 export const getTiresByAreaName = async (areaName: string): Promise<any[]> => {
   try {
     const db = await openDatabase();
-    
+    console.log(db);
     // 先找到區域ID
     const areaResult = await db.getAllAsync('SELECT id FROM areas WHERE name = ?;', [areaName]);
     

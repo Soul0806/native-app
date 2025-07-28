@@ -1,5 +1,5 @@
-import { fetchSpecs } from "@/app/api/fetchSpecs";
-import { getAreas, getTiresByAreaName } from "@/db";
+import { fetchAllStock } from "@/app/api/fetchAllstock";
+import { addTire, getAreas, getTiresByAreaName } from "@/db";
 import React, { useEffect, useState } from "react";
 import {
   ActionSheetIOS,
@@ -31,16 +31,20 @@ type Tires = {
 };
 
 const InsertModal = () => {
-  const [spec, setSpec] = useState<Record<string, SpecList[]>>({});
+  const [stockByArea, setStockByArea] = useState<Record<string, SpecList[]>>(
+    {}
+  );
   const [areas, setAreas] = useState<Area[]>([]);
-  const [areaId, setAreaId] = useState<number>(3);
-  const [selectedValue, setSelectedValue] = useState("倉庫內");
-  const [tireRecords, setTireRecords] = useState<Tires[]>([]);
+  const [areaId, setAreaId] = useState<number | null>(null);
+  const [selectedValue, setSelectedValue] = useState("店外");
+  const [recordsByArea, setRecordsByArea] = useState<Tires[]>([]);
 
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [unfolderSpec, setUnfolderSpec] = useState<Record<string, SpecList[]>>(
     {}
   );
+
+  const [recordsLoaded, setRecordsLoaded] = useState<boolean>(false);
   const [text, setText] = useState("");
 
   const handleInsert = async () => {
@@ -55,61 +59,55 @@ const InsertModal = () => {
   };
 
   useEffect(() => {
+    // console.log(111);
     const loadTires = async (area: string) => {
-      const tireRecords = await getTiresByAreaName(area);
+      const recordsByArea = await getTiresByAreaName(area);
       const areas = await getAreas();
-      setTireRecords(tireRecords);
+      setRecordsByArea(recordsByArea);
       setAreas(areas);
+      setRecordsLoaded(true);
     };
 
     loadTires(selectedValue);
-
-    // loadAreas();
-    // setAreas();
-    // initDB();
   }, []);
 
   useEffect(() => {
-    const loadSpecs = async () => {
-      // // get current area id and set
-      // const areaId = areas.find((a) => a.name == selectedValue)?.id;
-      // setAreaId(areaId);
-
-      const specs = await fetchSpecs();
-      const inchSpec = Object.fromEntries(
-        Object.entries(specs).map(([key, value]) => {
-          if (typeof value === "object" && value !== null) {
-            const specList = Object.keys(value).map((spec) => {
-              const item = tireRecords.find((record) => {
-                // console.log(record.area_id, areaId);
-                return record.spec === spec && record.area_id === areaId;
+    if (recordsLoaded) {
+      const loadSpecs = async () => {
+        const allStock = await fetchAllStock();
+        const stockByArea = Object.fromEntries(
+          Object.entries(allStock).map(([inch, specAndAQuan]) => {
+            if (typeof specAndAQuan === "object" && specAndAQuan !== null) {
+              const specList = Object.keys(specAndAQuan).map((spec) => {
+                const item = recordsByArea.find((record) => {
+                  return record.spec === spec && record.area_id === areaId;
+                });
+                return {
+                  spec: spec,
+                  quantity: item?.quantity ?? 0,
+                  area: item?.area_id ?? areaId,
+                };
+                // }
               });
-              return {
-                spec: spec,
-                quantity: item ? item.quantity : 0,
-                area: item?.area_id ?? areaId,
-              };
-              // }
-            });
-            return [key, specList];
-          }
-          return [];
-        })
-      );
-      setSpec(inchSpec);
-    };
+              return [inch, specList];
+            }
+            return [];
+          })
+        );
+        setStockByArea(stockByArea);
+      };
 
-    loadSpecs();
-  }, [areas]);
+      loadSpecs();
+    }
+  }, [recordsByArea]);
 
   useEffect(() => {
     toggleSection();
-    console.log(spec);
-  }, [spec]);
+  }, [stockByArea]);
 
   useEffect(() => {
     const data = Object.fromEntries(
-      Object.entries(spec).map(([inch, specs]) => {
+      Object.entries(stockByArea).map(([inch, specs]) => {
         const group = expandedSections.includes(inch) ? specs : [];
         return [inch, group];
       })
@@ -155,9 +153,9 @@ const InsertModal = () => {
 
   const stockUpdated = async (spec: string, area: string, quantity: number) => {
     try {
-      // await addTire(spec, area, quantity);
+      await addTire(spec, area, quantity);
 
-      setSpec((prev) => {
+      setStockByArea((prev) => {
         return Object.fromEntries(
           Object.entries(prev).map(([inch, specList]) => {
             const group = specList.map((item) => {
@@ -166,20 +164,10 @@ const InsertModal = () => {
               }
               return item;
             });
-            // console.log(inch, group);
             return [inch, group];
           })
         );
-
-        // return prev;
       });
-      // const areaObj = areas.find((item) => item.name === selectedValue);
-      // for (const record of tireRecords) {
-      //   if (record.spec === spec && record.area_id === areaObj?.id) {
-      //     record.quantity = record.quantity + quantity;
-      //     break;
-      //   }
-      // }
     } catch (err) {
       if (err instanceof Error) {
         console.error("❌", err.message);
@@ -190,12 +178,9 @@ const InsertModal = () => {
   };
 
   const existedSpec = (spec: string) => {
-    const found = tireRecords.find((item) => item.spec === spec);
-    if (found) {
-      return <Text>{found.quantity}</Text>;
-    } else {
-      return <Text>0</Text>;
-    }
+    const found = recordsByArea.find((item) => item.spec === spec);
+
+    return <Text>{found?.quantity ?? 0}</Text>;
   };
 
   return (
