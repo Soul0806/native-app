@@ -12,7 +12,8 @@ from datetime import datetime
 # from backend.services.loadRecords import loadRecords
 from backend.services.writeFromGApidoc import writeFromGApidoc
 from backend.services.txtParseTodict import txtParseToDict
-from backend.services.loadRecords import loadRecords
+from backend.services.test import test
+from backend.services.loadRecords import loadRecords, loadTestRecords
 from backend.services.loadSheet import loadStock
 # from backend.getSpecs import getStock
 # from backend.services import writeFromGApidoc, textParseTodict, loadRecords
@@ -32,6 +33,7 @@ class BrandCreate(BaseModel):
     
 spec_model = Dict[str, Dict[str, Dict[str, int]]]
 record_model = Dict[str, List[str]]
+testRecord_model = Dict[str, Dict[str, List[str]]]
 
 app = FastAPI()
 origins = [
@@ -55,7 +57,7 @@ def get_db():
         db.close
 
 db_denpendency = Annotated[session, Depends(get_db)]
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 @app.middleware("http")
 async def check_auth(request: Request, call_next):
@@ -65,8 +67,8 @@ async def check_auth(request: Request, call_next):
 
 @app.get('/csv/specs', response_model=spec_model)
 def getSpe(db: db_denpendency):
-    spec_list = loadStock()
-    return spec_list
+    allStock = loadStock()
+    return  allStock
 
 @app.get('/brands', response_model=List[Brand])
 def getBrands(db: db_denpendency):
@@ -80,6 +82,12 @@ def getBrands(db: db_denpendency):
     records = loadRecords()    
     return records
 
+@app.get('/test/txt/records', response_model=testRecord_model)
+def getBrands(db: db_denpendency):    
+    # writeFromGApidoc()
+    test()
+    records = loadTestRecords()        
+    return records
 
 @app.post('/brand/insert', response_model=Brand)
 def insertBrand(brand: BrandCreate, db: db_denpendency):

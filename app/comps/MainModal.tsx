@@ -1,10 +1,12 @@
-import { fetchRecords } from "@/app/api/fetchRecords";
+import { fetchRecords, fetchTestRecords } from "@/app/api/fetchRecords";
 import { fetchSpecs } from "@/app/api/fetchSpecs";
 import IPhoneKeyboard from "@/app/comps/form/KeyboardMock";
 import Record from "@/app/comps/tab/record/Record";
 import Stock from "@/app/comps/tab/stock/Stock";
+import Test from "@/app/comps/tab/test1/Test";
 import VTabs from "@/app/comps/tab/VTabs";
 import { entriesValueFilter, insertAt } from "@/app/libs/funcs";
+
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useEffect, useRef, useState } from "react";
@@ -23,6 +25,7 @@ const numbers = [...Array(10).keys()];
 const tabs = [
   { key: "Record", name: "銷售" },
   { key: "Stock", name: "庫存" },
+  { key: "Test", name: "測試" },
 ];
 
 function MainModal(props: any) {
@@ -50,17 +53,21 @@ function MainModal(props: any) {
   useEffect(() => {
     (async () => {
       try {
-        const [specs, records] = await Promise.all([
+        const [specs, records, testRecords] = await Promise.all([
           fetchSpecs(),
           fetchRecords(),
+          fetchTestRecords(),
         ]);
         setStock(specs);
         setRecords(records);
+        console.log(JSON.stringify(testRecords, null, 2));
       } catch (err) {
         console.error("資料抓取失敗", err);
       }
     })();
   }, []);
+
+  useEffect(() => {}, [records]);
 
   const handlePress = (val: string) => {
     let combiledStr: string = spec + val;
@@ -97,6 +104,13 @@ function MainModal(props: any) {
         ) : (
           <Stock stock={stock} spec={spec} />
         );
+      case "Test":
+        return <Test list={entriesValueFilter(records, spec)} />;
+      // return !stock ? (
+      //   <ActivityIndicator size="small" color="#0000ff" />
+      // ) : (
+      //   <Stock stock={stock} spec={spec} />
+      // );
     }
   };
 

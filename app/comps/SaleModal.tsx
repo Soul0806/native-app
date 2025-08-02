@@ -30,14 +30,14 @@ const SaleModal = (props: any) => {
     ...baseModalStyle,
 
     position: pos,
-    top: 0,    
+    top: 0,
   };
 
   const chargeModalStyle = {
     ...baseModalStyle,
 
     position: pos,
-    top: 200,    
+    top: 200,
   };
 
   const onPress = (event: string) => {
@@ -88,14 +88,14 @@ const SaleModal = (props: any) => {
             <Text>選擇金額: {charge}</Text>
             <Slider
               style={{ width: 200, height: 40 }}
-              value={charge}              
-              onValueChange={handleChargeChange}              
+              value={charge}
+              onValueChange={handleChargeChange}
               minimumValue={100}
-              maximumValue={1000}              
+              maximumValue={1000}
               step={100}
               minimumTrackTintColor="#000000"
-              maximumTrackTintColor="#FFFFFF"              
-              thumbTintColor='black'
+              maximumTrackTintColor="#FFFFFF"
+              thumbTintColor="black"
             />
             <View style={styles.row}>
               <DropdownComponent value={value} setValue={setValue} />
@@ -143,14 +143,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   note: {
-    // paddingBottom: 40,    
+    // paddingBottom: 40,
     // paddingHorizontal: 1
   },
-  noteContainer: {        
-    borderBottomColor: 'black',
+  noteContainer: {
+    borderBottomColor: "black",
     // borderWidth: 1,
     borderRadius: 10,
-  }
+  },
 });
 
 export default SaleModal;

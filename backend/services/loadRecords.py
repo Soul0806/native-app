@@ -14,7 +14,14 @@ def loadRecords():
         content = f.read();
         
     return ast.literal_eval(content)
-    
+
+def loadTestRecords():
+    file_name = '/assets/output2.txt'
+
+    with open(f"{BASE_DIR}{file_name}", "r", encoding="utf-8") as f: 
+        content = f.read();
+        
+    return ast.literal_eval(content)
 # dict_record = ast.literal_eval(content)
 
 #      open(output_file, "w", encoding="utf-8") as outfile):
