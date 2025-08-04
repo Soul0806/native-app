@@ -5,7 +5,11 @@ import Record from "@/app/comps/tab/record/Record";
 import Stock from "@/app/comps/tab/stock/Stock";
 import Test from "@/app/comps/tab/test1/Test";
 import VTabs from "@/app/comps/tab/VTabs";
-import { entriesValueFilter, insertAt } from "@/app/libs/funcs";
+import {
+  entriesValueFilter,
+  entriesValueFilter_1,
+  insertAt,
+} from "@/app/libs/funcs";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -35,6 +39,10 @@ function MainModal(props: any) {
   const [tabActive, setTabActive] = useState<string>("Record");
   const [stock, setStock] = useState<Record<string, any>>({});
 
+  const [test, setTest] = useState<Map<string, Map<string, string[]>> | null>(
+    null
+  );
+
   const autoScrollRef = useRef<ScrollView>(null);
   const hasScrolled = useRef(false); // 防止重複觸發
 
@@ -60,7 +68,7 @@ function MainModal(props: any) {
         ]);
         setStock(specs);
         setRecords(records);
-        console.log(JSON.stringify(testRecords, null, 2));
+        setTest(testRecords);
       } catch (err) {
         console.error("資料抓取失敗", err);
       }
@@ -105,7 +113,13 @@ function MainModal(props: any) {
           <Stock stock={stock} spec={spec} />
         );
       case "Test":
-        return <Test list={entriesValueFilter(records, spec)} />;
+        // return <Test list={entriesValueFilter(test, spec)} />;
+        return !test ? (
+          <ActivityIndicator size="small" color="#0000ff" />
+        ) : (
+          <Test list={entriesValueFilter_1(test, spec)} />
+        );
+
       // return !stock ? (
       //   <ActivityIndicator size="small" color="#0000ff" />
       // ) : (

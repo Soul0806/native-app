@@ -21,6 +21,33 @@ export function entriesValueFilter(obj: object, filterStr: string) {
     );
 }
 
+export function entriesValueFilter_1(obj: object, filterStr: string) {
+    const re = new RegExp(filterStr);   
+
+    // const aaa = { "2024": [1, 2], '2025': [2, 2] }
+    // const test = new Map(Object.entries(aaa).reverse())
+    const result = Object.fromEntries(
+        Object.entries(obj).map(([key, value]) => {
+            const result = Object.fromEntries(
+                Object.entries(value).map(([innerK, innerV]) => {
+
+                const filtered = (innerV as string[]).filter((v: string) => re.test(v))
+                if(filtered.length > 0 ) {
+                return [innerK, filtered];     
+                }   
+                    return undefined;
+                }).filter((entry): entry is [string, string[]] => entry !== undefined )
+                .reverse()
+            )
+            
+            return [key, result]
+            
+        }).reverse()
+    );
+    // console.log(new Map(Object.entries(result).reverse()));
+    return new Map(Object.entries(result).reverse()) as Map<string, string[]>;
+}
+
 export function convertToEntries(obj: Record<string, string[]>, keys: string[]) {
     const objectArray = Object.entries(obj).map(([key, value]) => ({
         [keys[0]]: key,
