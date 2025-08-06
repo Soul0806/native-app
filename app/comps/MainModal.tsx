@@ -30,6 +30,7 @@ const tabs = [
   { key: "Record", name: "銷售" },
   { key: "Stock", name: "庫存" },
   { key: "Test", name: "測試" },
+  // { key: "Price", name: "售價" },
 ];
 
 export type NestedRecord = Record<string, Record<string, string[]>>;
@@ -118,6 +119,13 @@ function MainModal(props: any) {
         ) : (
           <Test list={entriesValueFilter_1(test, spec)} />
         );
+      // case "Price":
+      //   return !price ? (
+      //     <ActivityIndicator size="small" color="#0000ff" />
+      //   ) : (
+      //     <Price />
+      //     // <Test list={entriesValueFilter_1(test, spec)} />
+      //   );
     }
   };
 
