@@ -6,6 +6,8 @@ const API = {
   BRAND: `${API_BASE_URL}/brands`,
   CRV_SPEC: `${API_BASE_URL}/csv/specs`,
   REFRESH: `${API_BASE_URL}/refresh-data`,
+
+  PRICE: `${API_BASE_URL}/txt/price`,
 };
 
 export { API_BASE_URL };

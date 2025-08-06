@@ -1,4 +1,4 @@
-import type { NestedRecord } from "@/app/comps/MainModal";
+import type { NestedRecord, Price } from "@/app/comps/MainModal";
 
 export function removeLastThreeChars(input: string): string {
     return input.slice(0, -3); // 從頭取到倒數第 3 個字元之前
@@ -40,6 +40,18 @@ export function entriesValueFilter_1(obj: NestedRecord, filterStr: string) {
     }
 
     return outerMap
+}
+
+export function entriesValueFilter_2(obj: Price, filterStr: string) {
+    const re = new RegExp(filterStr);   
+    let price: Price = {}
+     for (const [key, value] of Object.entries(obj)) {
+        const test = re.test(key)
+        if(test) {
+            price[key] = value
+        }   
+    }
+    return price
 }
 
 export function convertToEntries(obj: Record<string, string[]>, keys: string[]) {

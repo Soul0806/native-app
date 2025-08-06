@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 # from backend.services.loadRecords import loadRecords
+from backend.services.priceParseToDict import priceParseToDict
 from backend.services.writeFromGApidoc import writeFromGApidoc
 from backend.services.txtParseTodict import txtParseToDict
 from backend.services.test import test
@@ -33,6 +34,7 @@ class BrandCreate(BaseModel):
     
 spec_model = Dict[str, Dict[str, Dict[str, int]]]
 record_model = Dict[str, List[str]]
+price_model = Dict[str, str]
 testRecord_model = Dict[str, Dict[str, List[str]]]
 
 app = FastAPI()
@@ -84,12 +86,12 @@ def getBrands(db: db_denpendency):
     records = loadRecords()    
     return records
 
-# @app.get('/txt/price', response_model=record_model)
-# def getBrands(db: db_denpendency):    
-#     writeFromGApidoc()
-#     txtParseToDict()
-#     records = loadRecords()    
-#     return records
+@app.get('/txt/price', response_model=price_model)
+def getPrice(db: db_denpendency):        
+    # writeFromGApidoc()
+    price = priceParseToDict()
+    # records = loadRecords()    
+    return price
 
 @app.get('/test/txt/records', response_model=testRecord_model)
 def getBrands(db: db_denpendency):    

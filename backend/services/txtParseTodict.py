@@ -7,8 +7,6 @@ import backend.services.writeFromGApidoc
 from collections import defaultdict
 from backend.libs.func import BASE_DIR
 
-# input_file = f'{BASE_DIR}/assets/records_assets.txt'
-# output_file = f'{BASE_DIR}/assets/output.txt'
 def txtParseToDict():
     input_file = f'{BASE_DIR}/assets/records_googleApidoc.txt'
     output_file = f'{BASE_DIR}/assets/output1.txt'
@@ -26,5 +24,6 @@ def txtParseToDict():
             else:
                 result[date].append(clean_line)
         
-        json.dump(dict(result), outfile, ensure_ascii=False, indent=2)        
+        json.dump(dict(result), outfile, ensure_ascii=False, indent=2)
+        
         

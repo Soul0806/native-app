@@ -1,6 +1,8 @@
+import { fetchPrice } from "@/app/api/fetchPrice";
 import { fetchRecords, fetchTestRecords } from "@/app/api/fetchRecords";
 import { fetchSpecs } from "@/app/api/fetchSpecs";
 import IPhoneKeyboard from "@/app/comps/form/KeyboardMock";
+import Price from "@/app/comps/tab/Price/Price";
 import Record from "@/app/comps/tab/record/Record";
 import Stock from "@/app/comps/tab/stock/Stock";
 import Test from "@/app/comps/tab/test1/Test";
@@ -8,6 +10,7 @@ import VTabs from "@/app/comps/tab/VTabs";
 import {
   entriesValueFilter,
   entriesValueFilter_1,
+  entriesValueFilter_2,
   insertAt,
 } from "@/app/libs/funcs";
 
@@ -30,10 +33,11 @@ const tabs = [
   { key: "Record", name: "銷售" },
   { key: "Stock", name: "庫存" },
   { key: "Test", name: "測試" },
-  // { key: "Price", name: "售價" },
+  { key: "Price", name: "售價" },
 ];
 
 export type NestedRecord = Record<string, Record<string, string[]>>;
+export type Price = Record<string, string>;
 
 function MainModal(props: any) {
   const scrollRef = useRef<ScrollView>(null);
@@ -41,6 +45,7 @@ function MainModal(props: any) {
   const [records, setRecords] = useState<Record<string, string[]> | null>(null);
   const [tabActive, setTabActive] = useState<string>("Record");
   const [stock, setStock] = useState<Record<string, any>>({});
+  const [price, setPrice] = useState<Record<string, any>>({});
 
   const [test, setTest] = useState<NestedRecord | null>(null);
 
@@ -62,14 +67,16 @@ function MainModal(props: any) {
   useEffect(() => {
     (async () => {
       try {
-        const [specs, records, testRecords] = await Promise.all([
+        const [specs, records, testRecords, price] = await Promise.all([
           fetchSpecs(),
           fetchRecords(),
           fetchTestRecords(),
+          fetchPrice(),
         ]);
         setStock(specs);
         setRecords(records);
         setTest(testRecords);
+        setPrice(price);
       } catch (err) {
         console.error("資料抓取失敗", err);
       }
@@ -119,13 +126,13 @@ function MainModal(props: any) {
         ) : (
           <Test list={entriesValueFilter_1(test, spec)} />
         );
-      // case "Price":
-      //   return !price ? (
-      //     <ActivityIndicator size="small" color="#0000ff" />
-      //   ) : (
-      //     <Price />
-      //     // <Test list={entriesValueFilter_1(test, spec)} />
-      //   );
+      case "Price":
+        return !price ? (
+          <ActivityIndicator size="small" color="#0000ff" />
+        ) : (
+          <Price price={entriesValueFilter_2(price, spec)} />
+          // <Test list={entriesValueFilter_1(test, spec)} />
+        );
     }
   };
 
