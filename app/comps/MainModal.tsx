@@ -32,6 +32,8 @@ const tabs = [
   { key: "Test", name: "測試" },
 ];
 
+export type NestedRecord = Record<string, Record<string, string[]>>;
+
 function MainModal(props: any) {
   const scrollRef = useRef<ScrollView>(null);
   const [spec, setSpec] = useState<string>("");
@@ -39,9 +41,7 @@ function MainModal(props: any) {
   const [tabActive, setTabActive] = useState<string>("Record");
   const [stock, setStock] = useState<Record<string, any>>({});
 
-  const [test, setTest] = useState<Map<string, Map<string, string[]>> | null>(
-    null
-  );
+  const [test, setTest] = useState<NestedRecord | null>(null);
 
   const autoScrollRef = useRef<ScrollView>(null);
   const hasScrolled = useRef(false); // 防止重複觸發
@@ -113,18 +113,11 @@ function MainModal(props: any) {
           <Stock stock={stock} spec={spec} />
         );
       case "Test":
-        // return <Test list={entriesValueFilter(test, spec)} />;
         return !test ? (
           <ActivityIndicator size="small" color="#0000ff" />
         ) : (
           <Test list={entriesValueFilter_1(test, spec)} />
         );
-
-      // return !stock ? (
-      //   <ActivityIndicator size="small" color="#0000ff" />
-      // ) : (
-      //   <Stock stock={stock} spec={spec} />
-      // );
     }
   };
 

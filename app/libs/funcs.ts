@@ -1,3 +1,4 @@
+import type { NestedRecord } from "@/app/comps/MainModal";
 
 export function removeLastThreeChars(input: string): string {
     return input.slice(0, -3); // 從頭取到倒數第 3 個字元之前
@@ -6,7 +7,7 @@ export function pp(arg: object) {
     return JSON.stringify(arg, null, 2);
 }
 
-export function entriesValueFilter(obj: object, filterStr: string) {
+export function entriesValueFilter(obj: Record<string, string[]>, filterStr: string) {
     const re = new RegExp(filterStr);
     return Object.fromEntries(
         Object.entries(obj).map(([key, value]) => {
@@ -21,31 +22,24 @@ export function entriesValueFilter(obj: object, filterStr: string) {
     );
 }
 
-export function entriesValueFilter_1(obj: object, filterStr: string) {
+export function entriesValueFilter_1(obj: NestedRecord, filterStr: string) {
     const re = new RegExp(filterStr);   
+    const outerMap = new Map<string, Map<string, string[]>>();
 
-    // const aaa = { "2024": [1, 2], '2025': [2, 2] }
-    // const test = new Map(Object.entries(aaa).reverse())
-    const result = Object.fromEntries(
-        Object.entries(obj).map(([key, value]) => {
-            const result = Object.fromEntries(
-                Object.entries(value).map(([innerK, innerV]) => {
+    for (const [key, value] of Object.entries(obj).reverse()) {
+        const innerMap = new Map<string, string[]>();
 
-                const filtered = (innerV as string[]).filter((v: string) => re.test(v))
-                if(filtered.length > 0 ) {
-                return [innerK, filtered];     
-                }   
-                    return undefined;
-                }).filter((entry): entry is [string, string[]] => entry !== undefined )
-                .reverse()
-            )
-            
-            return [key, result]
-            
-        }).reverse()
-    );
-    // console.log(new Map(Object.entries(result).reverse()));
-    return new Map(Object.entries(result).reverse()) as Map<string, string[]>;
+        for (const [innerK, innerV] of Object.entries(value as Record<string, string[]>).reverse()) {
+        const filtered = innerV.filter(v => re.test(v));
+            if (filtered.length > 0) {
+                innerMap.set(innerK, filtered);
+            }
+        }
+
+        outerMap.set(key, innerMap);
+    }
+
+    return outerMap
 }
 
 export function convertToEntries(obj: Record<string, string[]>, keys: string[]) {
