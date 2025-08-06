@@ -39,6 +39,8 @@ app = FastAPI()
 origins = [
     "http://localhost:8081",  # 你前端的開發網址
     "http://127.0.0.1:8081"   # 可選，補一個別名
+    "http://localhost:8082",  # 你前端的開發網址
+    "http://127.0.0.1:8082"   # 可選，補一個別名
 ]
 
 app.add_middleware(
@@ -81,6 +83,13 @@ def getBrands(db: db_denpendency):
     txtParseToDict()
     records = loadRecords()    
     return records
+
+# @app.get('/txt/price', response_model=record_model)
+# def getBrands(db: db_denpendency):    
+#     writeFromGApidoc()
+#     txtParseToDict()
+#     records = loadRecords()    
+#     return records
 
 @app.get('/test/txt/records', response_model=testRecord_model)
 def getBrands(db: db_denpendency):    
