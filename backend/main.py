@@ -81,7 +81,7 @@ def getBrands(db: db_denpendency):
 
 @app.get('/txt/records', response_model=record_model)
 def getBrands(db: db_denpendency):    
-    writeFromGApidoc()
+    # writeFromGApidoc()
     txtParseToDict()
     records = loadRecords()    
     return records
