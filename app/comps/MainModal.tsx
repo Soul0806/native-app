@@ -73,6 +73,7 @@ function MainModal(props: any) {
           fetchTestRecords(),
           fetchPrice(),
         ]);
+
         setStock(specs);
         setRecords(records);
         setTest(testRecords);

@@ -83,7 +83,7 @@ def getBrands(db: db_denpendency):
 def getBrands(db: db_denpendency):    
     # writeFromGApidoc()
     txtParseToDict()
-    records = loadRecords()    
+    records = loadRecords()        
     return records
 
 @app.get('/txt/price', response_model=price_model)

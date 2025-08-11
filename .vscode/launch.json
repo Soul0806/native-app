@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FastAPI Dev (reload, :8001)",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "backend.main:app",
+        "--reload",
+        "--host", "0.0.0.0",
+        "--port", "8001"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "jinja": true,
+      "justMyCode": true
+    },
+    {
+      "name": "FastAPI Prod (no reload, :8000)",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "backend.main:app",
+        "--host", "0.0.0.0",
+        "--port", "8000"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "jinja": true,
+      "justMyCode": true
+    }
+  ]
+}
