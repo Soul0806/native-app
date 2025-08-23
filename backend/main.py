@@ -63,11 +63,11 @@ def get_db():
 db_denpendency = Annotated[session, Depends(get_db)]
 # Base.metadata.create_all(bind=engine)
 
-@app.middleware("http")
-async def check_auth(request: Request, call_next):
-    if request.headers.get("x-api-key") != "00001111":
-        raise HTTPException(status_code=403, detail="Unauthorized")
-    return await call_next(request)
+# @app.middleware("http")
+# async def check_auth(request: Request, call_next):
+#     if request.headers.get("x-api-key") != "00001111":
+#         raise HTTPException(status_code=403, detail="Unauthorized")
+#     return await call_next(request)
 
 @app.get('/csv/specs', response_model=spec_model)
 def getSpe(db: db_denpendency):
